@@ -6,77 +6,60 @@
     <title>chnl.extended</title>
     <link rel="icon" type="image/x-icon" href="https://chnl.bnkd.xyz/chnl.png" />
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Custom styles for the liquid glass effect */
         body {
             font-family: 'Inter', sans-serif;
-            /* Background GIF for a modern look */
             background: url('https://dl.bnkd.xyz/ava/background.gif') no-repeat center center fixed;
-            background-size: cover; /* Ensure the GIF covers the entire background */
-            min-height: 100vh; /* Ensure full viewport height */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px; /* Add some padding for smaller screens */
+            background-size: cover; 
         }
 
         .glass-container {
-            /* Basic styling for the glass effect */
-            background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent white */
-            backdrop-filter: blur(15px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(15px); /* Safari support cause apple is shit */
-            border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
-            border-radius: 75px; /* Rounded corners */
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Soft shadow */
-            padding: 80px; /* Increased padding */
-            text-align: center;
-            max-width: 900px; /* Increased max-width */
-            width: 100%; /* Full width on smaller screens */
-            color: #ffffff; /* White text color */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            background-color: rgba(255, 255, 255, 0.15); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
         }
 
         .glass-button {
-            /* Liquid glass effect for the button */
-            background-color: rgba(255, 255, 255, 0.1); /* Slightly more transparent than container */
-            backdrop-filter: blur(10px); /* Frosted glass effect for button */
-            -webkit-backdrop-filter: blur(10px); /* Safari support fuck apple */
-            border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
-            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.27); /* Softer shadow for button */
-            transition: all 0.3s ease; /* Smooth transition for hover effects */
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
 
         .glass-button:hover {
-            background-color: rgba(255, 255, 255, 0.2); /* Less transparent on hover */
-            box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.4); /* More shadow on hover */
-            transform: scale(1.05); /* Scale up on hover */
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.4); 
+            transform: scale(1.05);
         }
     </style>
 </head>
-<body>
-    <div class="glass-container">
-        <!-- Main title -->
-        <h1 class="text-6xl md:text-7xl font-extrabold mb-6 drop-shadow-lg">
+<body class="min-h-screen flex items-center justify-center p-5 text-white antialiased relative">
+
+    <div class="glass-container
+                border border-white border-opacity-30 rounded-[75px] shadow-xl
+                p-10 md:p-20 lg:p-24 max-w-xl md:max-w-3xl lg:max-w-4xl w-full
+                flex flex-col items-center justify-center text-center">
+        <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-4 md:mb-6 drop-shadow-lg">
             chnl.extended
         </h1>
-        <!-- Subtitle -->
-        <p class="text-2xl md:text-3xl mb-10 opacity-90">
+        <p class="text-xl sm:text-2xl md:text-3xl lg:text-4xl mb-8 md:mb-10 opacity-90">
             THE SITE IS IN ALPHA, CLICK THE BUTTON BELOW TO START
         </p>
-        <!-- Button to redirect -->
         <a href="https://chnl.bnkd.xyz/watch" target="_blank" rel="noopener noreferrer">
-            <button class="glass-button text-white font-bold py-4 px-10 rounded-full focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50">
+            <button class="glass-button
+                           text-white font-bold py-3 px-8 sm:py-4 sm:px-10 rounded-full
+                           focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50
+                           shadow-md hover:shadow-lg">
                 Start Watching
             </button>
         </a>
     </div>
-        <div class="absolute bottom-4 middle-4">
+
+    <!-- Powered by Waveline Tag -->
+    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2">
         <img src="http://chnl.bnkd.xyz/pwdbywaveline.png" alt="Powered by Waveline" class="h-8 sm:h-10 opacity-80">
     </div>
+
 </body>
 </html>
