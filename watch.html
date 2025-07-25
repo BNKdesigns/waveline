@@ -81,31 +81,6 @@
             transform: translateY(0);
         }
         
-        /* Settings dropdown improvements */
-        .theme-dropdown {
-            border-radius: 20px;
-            padding: 15px;
-            margin-bottom: 15px;
-            backdrop-filter: blur(15px);
-            background: rgba(30, 30, 40, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-        
-        .theme-option {
-            padding: 12px 20px;
-            border-radius: 12px;
-            margin: 8px 0;
-            font-weight: 500;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        }
-        
-        .theme-option:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        }
-        
         /* Frosted black liquid glass effect for channel info */
         #channelInfo {
             backdrop-filter: blur(24px) saturate(200%);
@@ -253,7 +228,7 @@
     </div>
 
     <script>
-        const navbarHideDelay = 20000; // 20 seconds
+        const navbarHideDelay = 20000; // 20secs
         let navbarTimeout;
         
         // Define channel data in a centralized array
@@ -262,31 +237,31 @@
                 id: 'eel',
                 name: 'EEL SD',
                 streamUrl: 'https://cdn.webvision.fun/memfs/6193a8f9-103d-4bdf-99f3-e563b748037b.m3u8',
-                iconUrl: 'https://beta.webvision.fun/assets/icons/eel.png', // Placeholder PNG
+                iconUrl: 'https://beta.webvision.fun/assets/icons/eel.png', 
                 description: 'it feels eel, its on eel, everything is eel.',
                 gradient: 'linear-gradient(145deg, rgba(111,11,222,0.7) 0%, rgba(222,11,111,0.7) 100%)'
             },
             {
                 id: 'sports',
                 name: 'Sports Central',
-                streamUrl: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-                iconUrl: 'https://placehold.co/40x40/ff4500/ffffff/png?text=SPORTS', // Placeholder PNG
+                streamUrl: 'https://live-bshto1202.telewebion.com/ek/varzesh/live/1080p/index.m3u8',
+                iconUrl: 'https://placehold.co/40x40/ff4500/ffffff/png?text=SPORTS', 
                 description: 'Live games, highlights, and expert commentary.',
                 gradient: 'linear-gradient(145deg, rgba(255,100,0,0.7) 0%, rgba(255,200,0,0.7) 100%)'
             },
             {
-                id: 'music',
-                name: 'Music Hits',
+                id: 'news',
+                name: 'News',
                 streamUrl: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-                iconUrl: 'https://placehold.co/40x40/8a2be2/ffffff/png?text=MUSIC', // Placeholder PNG
-                description: 'Latest chart-toppers and classic hits 24/7.',
+                iconUrl: 'https://live-bshto1202.telewebion.com/ek/irinn/live/1080p/index.m3u8',
+                description: 'News about the world from iran im in the fucking car help',
                 gradient: 'linear-gradient(145deg, rgba(150,0,255,0.7) 0%, rgba(255,0,200,0.7) 100%)'
             },
             {
                 id: 'kids',
                 name: 'Kids Zone',
-                streamUrl: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', // Using a placeholder stream
-                iconUrl: 'https://placehold.co/40x40/32cd32/ffffff/png?text=KIDS', // Placeholder PNG
+                streamUrl: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', 
+                iconUrl: 'https://placehold.co/40x40/32cd32/ffffff/png?text=KIDS',
                 description: 'Fun and educational shows for children of all ages.',
                 gradient: 'linear-gradient(145deg, rgba(50,205,50,0.7) 0%, rgba(0,128,0,0.7) 100%)'
             }
@@ -302,9 +277,9 @@
             const fullscreenBtn = document.getElementById('fullscreenBtn');
             const startupPage = document.getElementById('startupPage');
             let hls = new Hls();
-            let currentChannelId = null; // Changed to store channel ID
+            let currentChannelId = null;
 
-            // Function to show video player and enable controls
+            // shows video player and enable controls
             function showVideoPlayer() {
                 startupPage.classList.add('hidden');
                 videoContainer.classList.remove('hidden');
@@ -316,7 +291,7 @@
                 });
             }
             
-            // Function to load a stream
+            // loads the stream
             function loadStream(url) {
                 if (Hls.isSupported()) {
                     hls.loadSource(url);
@@ -333,11 +308,10 @@
                     });
                 } else {
                     console.error('HLS is not supported in this browser and native HLS playback is not available.');
-                    // Optionally, display a message to the user
                 }
             }
 
-            // Function to update play/pause icon based on video state
+            //update pp icon based on video state
             function updatePlayPauseIcon() {
                 const icon = playPauseBtn.querySelector('i');
                 if (videoPlayer.paused) {
@@ -349,7 +323,7 @@
                 }
             }
             
-            // Function to update mute icon based on volume state
+            // update mute icon based on volume
             function updateMuteIcon() {
                 const icon = muteBtn.querySelector('i');
                 if (videoPlayer.muted || videoPlayer.volume === 0) {
@@ -394,7 +368,7 @@
                     
                     // Set channel icon (PNG)
                     channelIcon.src = channelData.iconUrl;
-                    channelIcon.alt = channelData.name + ' Icon';
+                    channelIcon.alt = channelData.name + ' Logo';
 
                     // Apply gradient directly from channelData
                     channelIconBg.style.background = channelData.gradient;
@@ -433,7 +407,7 @@
                 
                 const img = document.createElement('img');
                 img.src = channel.iconUrl;
-                img.alt = channel.name + ' Icon';
+                img.alt = channel.name + ' Logo';
                 img.className = 'w-full h-full object-contain'; // Ensure icon fits and maintains aspect ratio
                 
                 button.appendChild(img);
@@ -443,7 +417,7 @@
                 button.addEventListener('click', () => handleChannelClick(channel, button));
             });
             
-            // Play/Pause toggle
+            // pp toggle
             playPauseBtn.addEventListener('click', function() {
                 if (videoPlayer.paused) {
                     videoPlayer.play();
@@ -453,13 +427,13 @@
                 updatePlayPauseIcon();
             });
             
-            // Mute toggle
+            // mute toggle
             muteBtn.addEventListener('click', function() {
                 videoPlayer.muted = !videoPlayer.muted;
                 updateMuteIcon();
             });
             
-            // Fullscreen toggle
+            // fullscreen toggle - minimize doesnt work
             fullscreenBtn.addEventListener('click', function() {
                 if (!document.fullscreenElement) {
                     if (videoContainer.requestFullscreen) {
@@ -497,33 +471,7 @@
                 }
             }
             
-            // Start navbar hide timer
-            startNavbarHideTimer();
-            
-            // Show navbar on mouse movement
-            document.addEventListener('mousemove', () => {
-                navbar.classList.remove('hidden');
-                startNavbarHideTimer();
-            });
 
-            // Keep navbar visible when hovering over it
-            navbar.addEventListener('mouseenter', () => {
-                clearTimeout(navbarTimeout);
-            });
-
-            navbar.addEventListener('mouseleave', () => {
-                startNavbarHideTimer();
-            });
-        });
-        
-        // Function to start the navbar hide timer
-        function startNavbarHideTimer() {
-            clearTimeout(navbarTimeout);
-            navbarTimeout = setTimeout(() => {
-                const navbar = document.querySelector('.navbar');
-                navbar.classList.add('hidden');
-            }, navbarHideDelay);
-        }
     </script>
 </body>
 </html>
