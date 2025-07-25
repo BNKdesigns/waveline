@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chnl.extended</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom styles for the liquid glass effect */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* Background GIF for a modern look */
+            background: url('https://dl.bnkd.xyz/ava/background.gif') no-repeat center center fixed;
+            background-size: cover; /* Ensure the GIF covers the entire background */
+            min-height: 100vh; /* Ensure full viewport height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px; /* Add some padding for smaller screens */
+        }
+
+        .glass-container {
+            /* Basic styling for the glass effect */
+            background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent white */
+            backdrop-filter: blur(15px); /* Frosted glass effect */
+            -webkit-backdrop-filter: blur(15px); /* Safari support */
+            border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
+            border-radius: 75px; /* Rounded corners */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Soft shadow */
+            padding: 80px; /* Increased padding to make the background bigger */
+            text-align: center;
+            max-width: 900px; /* Increased max-width significantly */
+            width: 100%; /* Full width on smaller screens */
+            color: #ffffff; /* White text color */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .glass-button {
+            /* Liquid glass effect for the button */
+            background-color: rgba(255, 255, 255, 0.1); /* Slightly more transparent than container */
+            backdrop-filter: blur(10px); /* Frosted glass effect for button */
+            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+            box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.27); /* Softer shadow for button */
+            transition: all 0.3s ease; /* Smooth transition for hover effects */
+        }
+
+        .glass-button:hover {
+            background-color: rgba(255, 255, 255, 0.2); /* Slightly less transparent on hover */
+            box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.4); /* More pronounced shadow on hover */
+            transform: scale(1.05); /* Slight scale up on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="glass-container">
+        <!-- Main title - increased text size -->
+        <h1 class="text-6xl md:text-7xl font-extrabold mb-6 drop-shadow-lg">
+            chnl.extended
+        </h1>
+        <!-- Subtitle - increased text size -->
+        <p class="text-2xl md:text-3xl mb-10 opacity-90">
+            THE SITE IS IN ALPHA, CLICK THE BUTTON BELOW TO START
+        </p>
+        <!-- Button to redirect - now with liquid glass and larger size -->
+        <a href="https://chnl.bnkd.xyz/watch" target="_blank" rel="noopener noreferrer">
+            <button class="glass-button text-white font-bold py-4 px-10 rounded-full focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50">
+                Start Watching
+            </button>
+        </a>
+    </div>
+</body>
+</html>
