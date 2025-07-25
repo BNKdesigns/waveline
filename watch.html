@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
-        /* Custom font */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #000;
         }
 
         .navbar {
@@ -32,14 +32,22 @@
                 0 15px 30px rgba(255, 255, 255, 0.3) inset,
                 0 -15px 30px rgba(0, 0, 0, 0.15) inset,
                 0 0 15px rgba(255, 255, 255, 0.1);
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.5s ease-in-out;
             width: 95%;
             left: 50%;
             transform: translateX(-50%);
             padding: 8px 16px;
-            height: 70px;
-            position: relative;
-            overflow: hidden;
+            height: auto; 
+            position: fixed;
+            bottom: 20px;
+            z-index: 50;
+            overflow: hidden; 
+        }
+
+        .navbar.hidden-navbar {
+            transform: translateX(-50%) translateY(150%);
+            opacity: 0;
+            pointer-events: none;
         }
 
         .navbar::before {
@@ -66,7 +74,6 @@
             100% { transform: translateX(100%) rotate(30deg); }
         }
         
-        /* Enhanced button styles */
         .navbar button {
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -81,7 +88,6 @@
             transform: translateY(0);
         }
         
-        /* Frosted black liquid glass effect for channel info */
         #channelInfo {
             backdrop-filter: blur(24px) saturate(200%);
             -webkit-backdrop-filter: blur(24px) saturate(200%);
@@ -138,7 +144,7 @@
         @media (max-width: 640px) {
             .navbar {
                 flex-direction: column;
-                height: auto;
+                height: auto; 
                 gap: 12px;
                 padding: 12px;
                 width: 90%;
@@ -146,8 +152,9 @@
             }
             .channels {
                 flex-direction: row;
+                flex-wrap: wrap; 
                 width: 100%;
-                justify-content: space-around;
+                justify-content: center; 
                 gap: 8px;
             }
             .player-controls {
@@ -157,7 +164,7 @@
                 padding: 8px;
                 border-radius: 24px;
             }
-            .channel-btn, #playPauseBtn, #muteBtn {
+            .channel-btn, #playPauseBtn, #muteBtn, #fullscreenBtn { 
                 width: 44px;
                 height: 44px;
             }
@@ -166,25 +173,22 @@
                 top: 0;
                 left: 0;
                 right: 0;
-                bottom: 80px;
+                bottom: 80px; 
             }
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col">
+<body class="bg-black min-h-screen flex flex-col">
     <div class="relative w-full h-screen">
-        <!-- Startup Page (initially visible) -->
         <div id="startupPage" class="absolute inset-0 z-10">
             <iframe src="https://bnkd.xyz" class="w-full h-full border-0"></iframe>
         </div>
         
-        <!-- Video Player (initially hidden) -->
         <div id="videoContainer" class="absolute inset-0 hidden">
-            <video id="videoPlayer" class="w-full h-full object-cover"></video>
+            <video id="videoPlayer" class="w-full h-full object-contain" loop></video>
             <div id="channelInfo" class="absolute top-4 left-4 text-white px-6 py-4 rounded-2xl hidden shadow-2xl transform transition-all duration-300 opacity-0 -translate-y-2 backdrop-blur-xl border border-white/10">
                 <div class="flex items-start space-x-4">
                     <div id="channelIconBg" class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
-                        <!-- Channel icon will be loaded here -->
                         <img id="channelIcon" class="w-8 h-8 object-contain" alt="Channel Icon">
                     </div>
                     <div class="flex-1">
@@ -202,15 +206,11 @@
         </div>
     </div>
     
-    <!-- Floating Navbar -->
     <div class="navbar fixed bottom-[20px] z-50 flex items-center justify-between px-6">
-        <!-- Channels will be dynamically loaded here -->
-        <div id="channelsContainer" class="channels flex space-x-4">
-            <!-- Channel buttons will be inserted here by JavaScript -->
+        <div id="channelsContainer" class="channels flex space-x-4 flex-wrap flex-grow min-w-0">
         </div>
         
-        <!-- Player Controls -->
-        <div class="player-controls flex items-center space-x-3 bg-opacity-20 rounded-full px-4 py-1">
+        <div class="player-controls flex items-center space-x-3 bg-opacity-20 rounded-full px-4 py-1 flex-shrink-0">
             <button id="playPauseBtn" class="p-3 aspect-square rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 transition-all w-10 h-10 flex items-center justify-center disabled" disabled>
                 <i class="fas fa-play text-white"></i>
             </button>
@@ -228,10 +228,10 @@
     </div>
 
     <script>
-        const navbarHideDelay = 20000; // 20secs
+        const navbarHideDelay = 10000;
         let navbarTimeout;
+        const fallbackVideoUrl = 'https://chnl.bnkd.xyz/rest.mp4';
         
-        // Define channel data in a centralized array
         const channelsData = [
             {
                 id: 'eel',
@@ -260,7 +260,7 @@
             {
                 id: 'kids',
                 name: 'Kids Zone',
-                streamUrl: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', 
+                streamUrl: 'https://test-streams.damn.dev/x36xhzz/x36xhzz.m3u8', 
                 iconUrl: 'https://placehold.co/40x40/32cd32/ffffff/png?text=KIDS',
                 description: 'Fun and educational shows for children of all ages.',
                 gradient: 'linear-gradient(145deg, rgba(50,205,50,0.7) 0%, rgba(0,128,0,0.7) 100%)'
@@ -271,7 +271,7 @@
             const navbar = document.querySelector('.navbar');
             const videoPlayer = document.getElementById('videoPlayer');
             const videoContainer = document.getElementById('videoContainer');
-            const channelsContainer = document.getElementById('channelsContainer'); // New container for dynamic buttons
+            const channelsContainer = document.getElementById('channelsContainer'); 
             const playPauseBtn = document.getElementById('playPauseBtn');
             const muteBtn = document.getElementById('muteBtn');
             const fullscreenBtn = document.getElementById('fullscreenBtn');
@@ -279,26 +279,43 @@
             let hls = new Hls();
             let currentChannelId = null;
 
-            // shows video player and enable controls
+            function resetNavbarTimeout() {
+                clearTimeout(navbarTimeout);
+                navbar.classList.remove('hidden-navbar');
+                navbarTimeout = setTimeout(() => {
+                    navbar.classList.add('hidden-navbar');
+                }, navbarHideDelay);
+            }
+
             function showVideoPlayer() {
                 startupPage.classList.add('hidden');
                 videoContainer.classList.remove('hidden');
                 
-                // Enable player controls
                 document.querySelectorAll('.player-controls button').forEach(button => {
                     button.disabled = false;
                     button.classList.remove('disabled');
                 });
+                resetNavbarTimeout();
             }
             
-            // loads the stream
             function loadStream(url) {
                 if (Hls.isSupported()) {
+                    hls.destroy();
+                    hls = new Hls();
                     hls.loadSource(url);
                     hls.attachMedia(videoPlayer);
                     hls.on(Hls.Events.MANIFEST_PARSED, function() {
                         videoPlayer.play();
                         updatePlayPauseIcon();
+                    });
+                    hls.on(Hls.Events.ERROR, function(event, data) {
+                        if (data.fatal) {
+                            console.error('HLS fatal error, attempting to load fallback MP4:', data);
+                            videoPlayer.src = fallbackVideoUrl;
+                            videoPlayer.load();
+                            videoPlayer.play();
+                            updatePlayPauseIcon();
+                        }
                     });
                 } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
                     videoPlayer.src = url;
@@ -306,12 +323,22 @@
                         videoPlayer.play();
                         updatePlayPauseIcon();
                     });
+                    videoPlayer.addEventListener('error', function() {
+                        console.error('Native HLS playback error, attempting to load fallback MP4.');
+                        videoPlayer.src = fallbackVideoUrl;
+                        videoPlayer.load();
+                        videoPlayer.play();
+                        updatePlayPauseIcon();
+                    }, { once: true });
                 } else {
-                    console.error('HLS is not supported in this browser and native HLS playback is not available.');
+                    console.error('HLS is not supported in this browser and native HLS playback is not available. Loading fallback MP4.');
+                    videoPlayer.src = fallbackVideoUrl;
+                    videoPlayer.load();
+                    videoPlayer.play();
+                    updatePlayPauseIcon();
                 }
             }
 
-            //update pp icon based on video state
             function updatePlayPauseIcon() {
                 const icon = playPauseBtn.querySelector('i');
                 if (videoPlayer.paused) {
@@ -323,7 +350,6 @@
                 }
             }
             
-            // update mute icon based on volume
             function updateMuteIcon() {
                 const icon = muteBtn.querySelector('i');
                 if (videoPlayer.muted || videoPlayer.volume === 0) {
@@ -335,23 +361,18 @@
                 }
             }
 
-            // Function to handle channel button clicks
             function handleChannelClick(channelData, buttonElement) {
-                // Update active state for channel buttons
                 document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
                 buttonElement.classList.add('active');
                 
-                // Show video container if hidden
                 if (videoContainer.classList.contains('hidden')) {
                     showVideoPlayer();
                 }
                 
-                // Load new stream if channel changed
                 if (currentChannelId !== channelData.id) {
                     currentChannelId = channelData.id;
                     loadStream(channelData.streamUrl);
                     
-                    // Update channel info display
                     const channelInfo = document.getElementById('channelInfo');
                     const channelName = document.getElementById('channelName');
                     const channelNumber = document.getElementById('channelNumber');
@@ -361,45 +382,37 @@
                     const channelProgressBg = document.getElementById('channelProgressBg');
                     
                     channelName.textContent = channelData.name;
-                    // Find the index of the current channel to display its number
                     const channelIndex = channelsData.findIndex(c => c.id === channelData.id);
                     channelNumber.textContent = '#' + (channelIndex + 1);
                     channelDescription.textContent = channelData.description;
                     
-                    // Set channel icon (PNG)
                     channelIcon.src = channelData.iconUrl;
                     channelIcon.alt = channelData.name + ' Logo';
 
-                    // Apply gradient directly from channelData
                     channelIconBg.style.background = channelData.gradient;
                     channelProgressBg.style.background = channelData.gradient;
 
-                    // Reset and show channel info animation
                     channelInfo.classList.remove('hidden', 'opacity-0', '-translate-y-2');
                     
-                    // Reset progress bar animation
                     const progressBar = document.getElementById('progressBar');
-                    progressBar.style.transition = 'none'; // Temporarily disable transition
+                    progressBar.style.transition = 'none';
                     progressBar.style.width = '100%';
-                    // Force reflow to apply the width change immediately
                     void progressBar.offsetWidth; 
-                    progressBar.style.transition = 'width 15s linear'; // Re-enable transition
+                    progressBar.style.transition = 'width 15s linear';
                     
                     setTimeout(() => {
-                        progressBar.style.width = '0%'; // Start progress animation
-                    }, 50); // Small delay to ensure transition is applied
+                        progressBar.style.width = '0%';
+                    }, 50);
 
-                    // Hide channel info after 15 seconds
                     setTimeout(() => {
                         channelInfo.classList.add('opacity-0', '-translate-y-2');
                         setTimeout(() => {
                             channelInfo.classList.add('hidden');
-                        }, 300); // Allow transition to complete before hiding
-                    }, 15000); 
+                        }, 300);
+                    }, 10000); 
                 }
             }
 
-            // Dynamically create channel buttons from channelsData
             channelsData.forEach((channel, index) => {
                 const button = document.createElement('button');
                 button.className = 'channel-btn flex items-center justify-center p-2 rounded-full bg-black bg-opacity-20 hover:bg-opacity-40 transition-all duration-300 w-10 h-10';
@@ -408,16 +421,14 @@
                 const img = document.createElement('img');
                 img.src = channel.iconUrl;
                 img.alt = channel.name + ' Logo';
-                img.className = 'w-full h-full object-contain'; // Ensure icon fits and maintains aspect ratio
+                img.className = 'w-full h-full object-contain';
                 
                 button.appendChild(img);
                 channelsContainer.appendChild(button);
 
-                // Add event listener to the dynamically created button
                 button.addEventListener('click', () => handleChannelClick(channel, button));
             });
             
-            // pp toggle
             playPauseBtn.addEventListener('click', function() {
                 if (videoPlayer.paused) {
                     videoPlayer.play();
@@ -427,20 +438,18 @@
                 updatePlayPauseIcon();
             });
             
-            // mute toggle
             muteBtn.addEventListener('click', function() {
                 videoPlayer.muted = !videoPlayer.muted;
                 updateMuteIcon();
             });
             
-            // fullscreen toggle - minimize doesnt work
             fullscreenBtn.addEventListener('click', function() {
                 if (!document.fullscreenElement) {
                     if (videoContainer.requestFullscreen) {
                         videoContainer.requestFullscreen();
-                    } else if (videoContainer.webkitRequestFullscreen) { /* Safari */
+                    } else if (videoContainer.webkitRequestFullscreen) {
                         videoContainer.webkitRequestFullscreen();
-                    } else if (videoContainer.msRequestFullscreen) { /* IE11 */
+                    } else if (videoContainer.msRequestFullscreen) {
                         videoContainer.msRequestFullscreen();
                     }
                     this.querySelector('i').classList.remove('fa-expand');
@@ -448,9 +457,9 @@
                 } else {
                     if (document.exitFullscreen) {
                         document.exitFullscreen();
-                    } else if (document.webkitExitFullscreen) { /* Safari */
+                    } else if (document.webkitExitFullscreen) {
                         document.webkitExitFullscreen();
-                    } else if (document.msExitFullscreen) { /* IE11 */
+                    } else if (document.msExitFullscreen) {
                         document.msExitFullscreen();
                     }
                     this.querySelector('i').classList.remove('fa-compress');
@@ -458,12 +467,10 @@
                 }
             });
             
-            // Update UI based on video events
             videoPlayer.addEventListener('play', updatePlayPauseIcon);
             videoPlayer.addEventListener('pause', updatePlayPauseIcon);
             videoPlayer.addEventListener('volumechange', updateMuteIcon);
             
-            // Initialize with the first channel active
             if (channelsData.length > 0) {
                 const firstChannelButton = channelsContainer.querySelector('.channel-btn');
                 if (firstChannelButton) {
@@ -471,7 +478,14 @@
                 }
             }
             
+            document.body.addEventListener('mousemove', resetNavbarTimeout);
+            document.body.addEventListener('touchstart', resetNavbarTimeout);
+            document.body.addEventListener('touchend', resetNavbarTimeout);
+            document.body.addEventListener('touchmove', resetNavbarTimeout);
 
+            resetNavbarTimeout();
+
+        });
     </script>
 </body>
 </html>
