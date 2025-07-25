@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>chnl.extended</title>
     <link rel="icon" type="image/x-icon" href="https://chnl.bnkd.xyz/chnl.png" />
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter -->
+    <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         /* Custom styles for the liquid glass effect */
@@ -27,13 +26,13 @@
             /* Basic styling for the glass effect */
             background-color: rgba(255, 255, 255, 0.15); /* Semi-transparent white */
             backdrop-filter: blur(15px); /* Frosted glass effect */
-            -webkit-backdrop-filter: blur(15px); /* Safari support */
+            -webkit-backdrop-filter: blur(15px); /* Safari support cause apple is shit */
             border: 1px solid rgba(255, 255, 255, 0.3); /* Subtle border */
             border-radius: 75px; /* Rounded corners */
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); /* Soft shadow */
-            padding: 80px; /* Increased padding to make the background bigger */
+            padding: 80px; /* Increased padding */
             text-align: center;
-            max-width: 900px; /* Increased max-width significantly */
+            max-width: 900px; /* Increased max-width */
             width: 100%; /* Full width on smaller screens */
             color: #ffffff; /* White text color */
             display: flex;
@@ -46,30 +45,30 @@
             /* Liquid glass effect for the button */
             background-color: rgba(255, 255, 255, 0.1); /* Slightly more transparent than container */
             backdrop-filter: blur(10px); /* Frosted glass effect for button */
-            -webkit-backdrop-filter: blur(10px); /* Safari support */
+            -webkit-backdrop-filter: blur(10px); /* Safari support fuck apple */
             border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
             box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.27); /* Softer shadow for button */
             transition: all 0.3s ease; /* Smooth transition for hover effects */
         }
 
         .glass-button:hover {
-            background-color: rgba(255, 255, 255, 0.2); /* Slightly less transparent on hover */
-            box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.4); /* More pronounced shadow on hover */
-            transform: scale(1.05); /* Slight scale up on hover */
+            background-color: rgba(255, 255, 255, 0.2); /* Less transparent on hover */
+            box-shadow: 0 6px 20px 0 rgba(0, 0, 0, 0.4); /* More shadow on hover */
+            transform: scale(1.05); /* Scale up on hover */
         }
     </style>
 </head>
 <body>
     <div class="glass-container">
-        <!-- Main title - increased text size -->
+        <!-- Main title -->
         <h1 class="text-6xl md:text-7xl font-extrabold mb-6 drop-shadow-lg">
             chnl.extended
         </h1>
-        <!-- Subtitle - increased text size -->
+        <!-- Subtitle -->
         <p class="text-2xl md:text-3xl mb-10 opacity-90">
             THE SITE IS IN ALPHA, CLICK THE BUTTON BELOW TO START
         </p>
-        <!-- Button to redirect - now with liquid glass and larger size -->
+        <!-- Button to redirect -->
         <a href="https://chnl.bnkd.xyz/watch" target="_blank" rel="noopener noreferrer">
             <button class="glass-button text-white font-bold py-4 px-10 rounded-full focus:outline-none focus:ring-4 focus:ring-white focus:ring-opacity-50">
                 Start Watching
