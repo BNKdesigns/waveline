@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>chnl.extended</title>
+    <link rel="icon" type="image/x-icon" href="https://chnl.bnkd.xyz/chnl.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        /* Custom font */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .navbar {
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            background: linear-gradient(
+                145deg, 
+                rgba(255,255,255,0.3) 0%, 
+                rgba(255,255,255,0.1) 50%, 
+                rgba(255,255,255,0.05) 100%
+            );
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+                0 15px 30px rgba(255, 255, 255, 0.3) inset,
+                0 -15px 30px rgba(0, 0, 0, 0.15) inset,
+                0 0 15px rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            width: 95%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            height: 70px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.1) 50%,
+                rgba(255,255,255,0) 100%
+            );
+            transform: rotate(30deg);
+            animation: shine 6s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            20% { transform: translateX(100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+        
+        /* Enhanced button styles */
+        .navbar button {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .navbar button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .navbar button:active {
+            transform: translateY(0);
+        }
+        
+        /* Settings dropdown improvements */
+        .theme-dropdown {
+            border-radius: 20px;
+            padding: 15px;
+            margin-bottom: 15px;
+            backdrop-filter: blur(15px);
+            background: rgba(30, 30, 40, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .theme-option {
+            padding: 12px 20px;
+            border-radius: 12px;
+            margin: 8px 0;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .theme-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Frosted black liquid glass effect for channel info */
+        #channelInfo {
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            background: linear-gradient(
+                145deg, 
+                rgba(0, 0, 0, 0.7) 0%, 
+                rgba(0, 0, 0, 0.5) 50%, 
+                rgba(0, 0, 0, 0.3) 100%
+            );
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+                0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        #channelInfo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.05) 0%,
+                rgba(255, 255, 255, 0.01) 50%,
+                rgba(255, 255, 255, 0.05) 100%
+            );
+            pointer-events: none;
+            z-index: -1;
+            border-radius: inherit;
+        }
+
+        .channel-btn.active {
+            background-color: rgba(0, 0, 0, 0.4);
+            transform: scale(1.1);
+        }
+        
+        .channel-btn:hover:not(.active) {
+            transform: scale(1.05);
+        }
+        
+        .player-container {
+            transition: all 0.3s ease;
+        }
+        
+        button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+        
+        @media (max-width: 640px) {
+            .navbar {
+                flex-direction: column;
+                height: auto;
+                gap: 12px;
+                padding: 12px;
+                width: 90%;
+                bottom: 10px;
+            }
+            .channels {
+                flex-direction: row;
+                width: 100%;
+                justify-content: space-around;
+                gap: 8px;
+            }
+            .player-controls {
+                width: 100%;
+                justify-content: space-around;
+                background: rgba(0,0,0,0.2) !important;
+                padding: 8px;
+                border-radius: 24px;
+            }
+            .channel-btn, #playPauseBtn, #muteBtn {
+                width: 44px;
+                height: 44px;
+            }
+            #videoContainer {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 80px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <div class="relative w-full h-screen">
+        <!-- Startup Page (initially visible) -->
+        <div id="startupPage" class="absolute inset-0 z-10">
+            <iframe src="https://bnkd.xyz" class="w-full h-full border-0"></iframe>
+        </div>
+        
+        <!-- Video Player (initially hidden) -->
+        <div id="videoContainer" class="absolute inset-0 hidden">
+            <video id="videoPlayer" class="w-full h-full object-cover"></video>
+            <div id="channelInfo" class="absolute top-4 left-4 text-white px-6 py-4 rounded-2xl hidden shadow-2xl transform transition-all duration-300 opacity-0 -translate-y-2 backdrop-blur-xl border border-white/10">
+                <div class="flex items-start space-x-4">
+                    <div id="channelIconBg" class="w-12 h-12 rounded-xl flex items-center justify-center shadow-lg">
+                        <!-- Channel icon will be loaded here -->
+                        <img id="channelIcon" class="w-8 h-8 object-contain" alt="Channel Icon">
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-baseline justify-between">
+                            <h2 id="channelName" class="text-2xl font-bold tracking-tight"></h2>
+                            <span id="channelNumber" class="text-sm font-medium bg-black/20 px-2 py-1 rounded-md"></span>
+                        </div>
+                        <p id="channelDescription" class="text-sm text-white/80 mt-1"></p>
+                    </div>
+                </div>
+                <div id="channelProgressBg" class="absolute bottom-0 left-0 right-0 h-1.5 rounded-b-2xl overflow-hidden">
+                    <div id="progressBar" class="h-full transition-all duration-15000 ease-linear" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Floating Navbar -->
+    <div class="navbar fixed bottom-[20px] z-50 flex items-center justify-between px-6">
+        <!-- Channels will be dynamically loaded here -->
+        <div id="channelsContainer" class="channels flex space-x-4">
+            <!-- Channel buttons will be inserted here by JavaScript -->
+        </div>
+        
+        <!-- Player Controls -->
+        <div class="player-controls flex items-center space-x-3 bg-opacity-20 rounded-full px-4 py-1">
+            <button id="playPauseBtn" class="p-3 aspect-square rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 transition-all w-10 h-10 flex items-center justify-center disabled" disabled>
+                <i class="fas fa-play text-white"></i>
+            </button>
+            
+            <div class="volume-control">
+                <button id="muteBtn" class="p-3 aspect-square rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 transition-all w-10 h-10 flex items-center justify-center disabled" disabled>
+                    <i class="fas fa-volume-up text-white"></i>
+                </button>
+            </div>
+
+            <button id="fullscreenBtn" class="p-3 aspect-square rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 transition-all w-10 h-10 flex items-center justify-center disabled" disabled>
+                <i class="fas fa-expand text-white"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const navbarHideDelay = 20000; // 20 seconds
+        let navbarTimeout;
+        
+        // Define channel data in a centralized array
+        const channelsData = [
+            {
+                id: 'eel',
+                name: 'EEL SD',
+                streamUrl: 'https://cdn.webvision.fun/memfs/6193a8f9-103d-4bdf-99f3-e563b748037b.m3u8',
+                iconUrl: 'https://beta.webvision.fun/assets/icons/eel.png', // Placeholder PNG
+                description: 'it feels eel, its on eel, everything is eel.',
+                gradient: 'linear-gradient(145deg, rgba(111,11,222,0.7) 0%, rgba(222,11,111,0.7) 100%)'
+            },
+            {
+                id: 'sports',
+                name: 'Sports Central',
+                streamUrl: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                iconUrl: 'https://placehold.co/40x40/ff4500/ffffff/png?text=SPORTS', // Placeholder PNG
+                description: 'Live games, highlights, and expert commentary.',
+                gradient: 'linear-gradient(145deg, rgba(255,100,0,0.7) 0%, rgba(255,200,0,0.7) 100%)'
+            },
+            {
+                id: 'music',
+                name: 'Music Hits',
+                streamUrl: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+                iconUrl: 'https://placehold.co/40x40/8a2be2/ffffff/png?text=MUSIC', // Placeholder PNG
+                description: 'Latest chart-toppers and classic hits 24/7.',
+                gradient: 'linear-gradient(145deg, rgba(150,0,255,0.7) 0%, rgba(255,0,200,0.7) 100%)'
+            },
+            {
+                id: 'kids',
+                name: 'Kids Zone',
+                streamUrl: 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8', // Using a placeholder stream
+                iconUrl: 'https://placehold.co/40x40/32cd32/ffffff/png?text=KIDS', // Placeholder PNG
+                description: 'Fun and educational shows for children of all ages.',
+                gradient: 'linear-gradient(145deg, rgba(50,205,50,0.7) 0%, rgba(0,128,0,0.7) 100%)'
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar');
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoContainer = document.getElementById('videoContainer');
+            const channelsContainer = document.getElementById('channelsContainer'); // New container for dynamic buttons
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const muteBtn = document.getElementById('muteBtn');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const startupPage = document.getElementById('startupPage');
+            let hls = new Hls();
+            let currentChannelId = null; // Changed to store channel ID
+
+            // Function to show video player and enable controls
+            function showVideoPlayer() {
+                startupPage.classList.add('hidden');
+                videoContainer.classList.remove('hidden');
+                
+                // Enable player controls
+                document.querySelectorAll('.player-controls button').forEach(button => {
+                    button.disabled = false;
+                    button.classList.remove('disabled');
+                });
+            }
+            
+            // Function to load a stream
+            function loadStream(url) {
+                if (Hls.isSupported()) {
+                    hls.loadSource(url);
+                    hls.attachMedia(videoPlayer);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        videoPlayer.play();
+                        updatePlayPauseIcon();
+                    });
+                } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                    videoPlayer.src = url;
+                    videoPlayer.addEventListener('loadedmetadata', function() {
+                        videoPlayer.play();
+                        updatePlayPauseIcon();
+                    });
+                } else {
+                    console.error('HLS is not supported in this browser and native HLS playback is not available.');
+                    // Optionally, display a message to the user
+                }
+            }
+
+            // Function to update play/pause icon based on video state
+            function updatePlayPauseIcon() {
+                const icon = playPauseBtn.querySelector('i');
+                if (videoPlayer.paused) {
+                    icon.classList.remove('fa-pause');
+                    icon.classList.add('fa-play');
+                } else {
+                    icon.classList.remove('fa-play');
+                    icon.classList.add('fa-pause');
+                }
+            }
+            
+            // Function to update mute icon based on volume state
+            function updateMuteIcon() {
+                const icon = muteBtn.querySelector('i');
+                if (videoPlayer.muted || videoPlayer.volume === 0) {
+                    icon.classList.remove('fa-volume-up');
+                    icon.classList.add('fa-volume-mute');
+                } else {
+                    icon.classList.remove('fa-volume-mute');
+                    icon.classList.add('fa-volume-up');
+                }
+            }
+
+            // Function to handle channel button clicks
+            function handleChannelClick(channelData, buttonElement) {
+                // Update active state for channel buttons
+                document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
+                buttonElement.classList.add('active');
+                
+                // Show video container if hidden
+                if (videoContainer.classList.contains('hidden')) {
+                    showVideoPlayer();
+                }
+                
+                // Load new stream if channel changed
+                if (currentChannelId !== channelData.id) {
+                    currentChannelId = channelData.id;
+                    loadStream(channelData.streamUrl);
+                    
+                    // Update channel info display
+                    const channelInfo = document.getElementById('channelInfo');
+                    const channelName = document.getElementById('channelName');
+                    const channelNumber = document.getElementById('channelNumber');
+                    const channelDescription = document.getElementById('channelDescription');
+                    const channelIcon = document.getElementById('channelIcon');
+                    const channelIconBg = document.getElementById('channelIconBg');
+                    const channelProgressBg = document.getElementById('channelProgressBg');
+                    
+                    channelName.textContent = channelData.name;
+                    // Find the index of the current channel to display its number
+                    const channelIndex = channelsData.findIndex(c => c.id === channelData.id);
+                    channelNumber.textContent = '#' + (channelIndex + 1);
+                    channelDescription.textContent = channelData.description;
+                    
+                    // Set channel icon (PNG)
+                    channelIcon.src = channelData.iconUrl;
+                    channelIcon.alt = channelData.name + ' Icon';
+
+                    // Apply gradient directly from channelData
+                    channelIconBg.style.background = channelData.gradient;
+                    channelProgressBg.style.background = channelData.gradient;
+
+                    // Reset and show channel info animation
+                    channelInfo.classList.remove('hidden', 'opacity-0', '-translate-y-2');
+                    
+                    // Reset progress bar animation
+                    const progressBar = document.getElementById('progressBar');
+                    progressBar.style.transition = 'none'; // Temporarily disable transition
+                    progressBar.style.width = '100%';
+                    // Force reflow to apply the width change immediately
+                    void progressBar.offsetWidth; 
+                    progressBar.style.transition = 'width 15s linear'; // Re-enable transition
+                    
+                    setTimeout(() => {
+                        progressBar.style.width = '0%'; // Start progress animation
+                    }, 50); // Small delay to ensure transition is applied
+
+                    // Hide channel info after 15 seconds
+                    setTimeout(() => {
+                        channelInfo.classList.add('opacity-0', '-translate-y-2');
+                        setTimeout(() => {
+                            channelInfo.classList.add('hidden');
+                        }, 300); // Allow transition to complete before hiding
+                    }, 15000); 
+                }
+            }
+
+            // Dynamically create channel buttons from channelsData
+            channelsData.forEach((channel, index) => {
+                const button = document.createElement('button');
+                button.className = 'channel-btn flex items-center justify-center p-2 rounded-full bg-black bg-opacity-20 hover:bg-opacity-40 transition-all duration-300 w-10 h-10';
+                button.setAttribute('data-channel-id', channel.id);
+                
+                const img = document.createElement('img');
+                img.src = channel.iconUrl;
+                img.alt = channel.name + ' Icon';
+                img.className = 'w-full h-full object-contain'; // Ensure icon fits and maintains aspect ratio
+                
+                button.appendChild(img);
+                channelsContainer.appendChild(button);
+
+                // Add event listener to the dynamically created button
+                button.addEventListener('click', () => handleChannelClick(channel, button));
+            });
+            
+            // Play/Pause toggle
+            playPauseBtn.addEventListener('click', function() {
+                if (videoPlayer.paused) {
+                    videoPlayer.play();
+                } else {
+                    videoPlayer.pause();
+                }
+                updatePlayPauseIcon();
+            });
+            
+            // Mute toggle
+            muteBtn.addEventListener('click', function() {
+                videoPlayer.muted = !videoPlayer.muted;
+                updateMuteIcon();
+            });
+            
+            // Fullscreen toggle
+            fullscreenBtn.addEventListener('click', function() {
+                if (!document.fullscreenElement) {
+                    if (videoContainer.requestFullscreen) {
+                        videoContainer.requestFullscreen();
+                    } else if (videoContainer.webkitRequestFullscreen) { /* Safari */
+                        videoContainer.webkitRequestFullscreen();
+                    } else if (videoContainer.msRequestFullscreen) { /* IE11 */
+                        videoContainer.msRequestFullscreen();
+                    }
+                    this.querySelector('i').classList.remove('fa-expand');
+                    this.querySelector('i').classList.add('fa-compress');
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) { /* Safari */
+                        document.webkitExitFullscreen();
+                    } else if (document.msExitFullscreen) { /* IE11 */
+                        document.msExitFullscreen();
+                    }
+                    this.querySelector('i').classList.remove('fa-compress');
+                    this.querySelector('i').classList.add('fa-expand');
+                }
+            });
+            
+            // Update UI based on video events
+            videoPlayer.addEventListener('play', updatePlayPauseIcon);
+            videoPlayer.addEventListener('pause', updatePlayPauseIcon);
+            videoPlayer.addEventListener('volumechange', updateMuteIcon);
+            
+            // Initialize with the first channel active
+            if (channelsData.length > 0) {
+                const firstChannelButton = channelsContainer.querySelector('.channel-btn');
+                if (firstChannelButton) {
+                    handleChannelClick(channelsData[0], firstChannelButton);
+                }
+            }
+            
+            // Start navbar hide timer
+            startNavbarHideTimer();
+            
+            // Show navbar on mouse movement
+            document.addEventListener('mousemove', () => {
+                navbar.classList.remove('hidden');
+                startNavbarHideTimer();
+            });
+
+            // Keep navbar visible when hovering over it
+            navbar.addEventListener('mouseenter', () => {
+                clearTimeout(navbarTimeout);
+            });
+
+            navbar.addEventListener('mouseleave', () => {
+                startNavbarHideTimer();
+            });
+        });
+        
+        // Function to start the navbar hide timer
+        function startNavbarHideTimer() {
+            clearTimeout(navbarTimeout);
+            navbarTimeout = setTimeout(() => {
+                const navbar = document.querySelector('.navbar');
+                navbar.classList.add('hidden');
+            }, navbarHideDelay);
+        }
+    </script>
+</body>
+</html>
