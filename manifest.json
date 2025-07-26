@@ -1,6 +1,6 @@
 {
-  "name": "chnl.extended",
-  "short_name": "chnl.ext",
+  "name": "webchnl Extended",
+  "short_name": "webchnl",
   "description": "temporary webchnl replacement",
   "start_url": "./",
   "display": "standalone",
