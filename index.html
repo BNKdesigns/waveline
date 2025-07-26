@@ -683,8 +683,6 @@
             const fullscreenBtn = document.getElementById('fullscreenBtn');
             const infoBtn = document.getElementById('infoBtn');
 
-            const startupPage = document.getElementById('startupPage');
-
             const channelInfoPopup = document.getElementById('channelInfoPopup');
             const closeInfoBtn = document.getElementById('closeInfoBtn');
             const channelNameEl = document.getElementById('channelName');
@@ -724,7 +722,6 @@
             }
 
             function showVideoPlayer() {
-                startupPage.classList.add('hidden');
                 videoContainer.classList.remove('hidden');
 
                 document.querySelectorAll('.player-controls button').forEach(button => {
