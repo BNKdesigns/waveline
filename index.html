@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>waveline</title>
-    <link rel="icon" type="image/x-icon" href="https://chnl.bnkd.xyz/waveline.png" />
+    <link rel="icon" type="image/x-icon" href="https://bnkd.xyz/waveline.png" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
     <meta property="og:type" content="website">
     <meta property="og:title" content="waveline">
     <meta property="og:description" content="temporary webchnl replacement">
-    <meta property="og:image" content="https://chnl.bnkd.xyz/wavelinebanner.png">
+    <meta property="og:image" content="https://bnkd.xyz/wavelinebanner.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="waveline">
     <meta name="twitter:description" content="temporary webchnl replacement">
-    <meta name="twitter:image" content="https://chnl.bnkd.xyz/wavelinebanner.png">
+    <meta name="twitter:image" content="https://bnkd.xyz/wavelinebanner.png">
     <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <!-- Marked.js for Markdown parsing -->
@@ -527,14 +527,14 @@
         const transientInfoDisplayDuration = 10000;
         let navbarTimeout;
         let transientInfoTimeout;
-        const fallbackVideoUrl = 'https://chnl.bnkd.xyz/offline.mp4';
+        const fallbackVideoUrl = 'https://bnkd.xyz/offline.mp4';
 
         const channelsData = [
             {
                 id: 'eel',
                 name: 'EEL Channel',
                 streamUrl: 'https://cdn.webvision.fun/memfs/6193a8f9-103d-4bdf-99f3-e563b748037b.m3u8',
-                iconUrl: 'https://chnl.bnkd.xyz/img/eel.png',
+                iconUrl: 'https://bnkd.xyz/img/eel.png',
                 description: 'cartoons that will hit you. hard.',
                 gradient: 'linear-gradient(145deg, rgba(111,11,222,0.7) 0%, rgba(222,11,111,0.7) 100%)',
                 website: 'https://beta.webvision.fun/channels/eel',
@@ -545,7 +545,7 @@
                 id: 'spark',
                 name: 'spark',
                 streamUrl: 'https://us.bnkd.xyz/live/spark.m3u8',
-                iconUrl: 'https://chnl.bnkd.xyz/img/spark.png',
+                iconUrl: 'https://bnkd.xyz/img/spark.png',
                 description: 'welcome to spark, feel free to watch',
                 gradient: 'linear-gradient(145deg, rgba(155, 52, 235,0.7) 0%, rgba(52, 113, 235,0.7) 100%)',
                 genre: 'General Entertainment',
@@ -562,7 +562,7 @@
                 id: 'magical',
                 name: 'MagicalTV',
                 streamUrl: 'https://us.bnkd.xyz/live/magical.m3u8',
-                iconUrl: 'https://chnl.bnkd.xyz/img/magicaltv.png',
+                iconUrl: 'https://bnkd.xyz/img/magicaltv.png',
                 description: 'MagicalTV is a webchannel that focuses on giving you some of the most magical shows and movies out there.',
                 gradient: 'linear-gradient(145deg, rgba(252, 3, 128,0.7) 0%, rgba(255, 0, 208,0.7) 100%)',
                 genre: 'Animation, Entertainment',
@@ -575,7 +575,7 @@
                 id: 'cubby',
                 name: 'Cubby',
                 streamUrl: 'https://us.bnkd.xyz/live/cubby.m3u8',
-                iconUrl: 'https://chnl.bnkd.xyz/img/cubby.png',
+                iconUrl: 'https://bnkd.xyz/img/cubby.png',
                 description: '',
                 gradient: 'linear-gradient(145deg, rgba(252, 3, 128,0.7) 0%, rgba(255, 0, 208,0.7) 100%)',
                 genre: 'Entertainment',
@@ -588,7 +588,7 @@
                 id: 'nook',
                 name: 'Nook',
                 streamUrl: 'https://us.bnkd.xyz/live/nook.m3u8',
-                iconUrl: 'https://chnl.bnkd.xyz/img/nook.png',
+                iconUrl: 'https://bnkd.xyz/img/nook.png',
                 description: '',
                 gradient: 'linear-gradient(145deg, rgba(252, 3, 128,0.7) 0%, rgba(255, 0, 208,0.7) 100%)',
                 genre: 'Animation, Entertainment',
@@ -601,7 +601,7 @@
                 id: 'cnextras',
                 name: 'Cartoon Network Extras',
                 streamUrl: 'https://us.bnkd.xyz/live/cnextras.m3u8',
-                iconUrl: 'https://chnl.bnkd.xyz/img/cnextras.png',
+                iconUrl: 'https://bnkd.xyz/img/cnextras.png',
                 description: 'CN Extras is a network relived by the Cartoon Network USA Check It 3.0 era.',
                 gradient: 'linear-gradient(145deg, rgba(237, 237, 237,0.7) 0%, rgba(181, 181, 181,0.7) 100%)',
                 genre: 'Entertainment, Animation',
@@ -613,7 +613,7 @@
                 id: 'cnmulti',
                 name: 'Cartoon Network Multi',
                 streamUrl: 'https://us.bnkd.xyz/live/multi.m3u8',
-                iconUrl: 'https://chnl.bnkd.xyz/img/cnmulti.png',
+                iconUrl: 'https://bnkd.xyz/img/cnmulti.png',
                 description: 'CN Multi is a network relived by the Cartoon Network.',
                 gradient: 'linear-gradient(145deg, rgba(255, 200, 0,0.7) 0%, rgba(212, 255, 0,0.7) 100%)',
                 genre: 'Entertainment, Animation',
@@ -625,7 +625,7 @@
                 id: 'db',
                 name: 'DoneBetter',
                 streamUrl: 'https://us.bnkd.xyz/live/db.m3u8',
-                iconUrl: 'https://chnl.bnkd.xyz/img/db.png',
+                iconUrl: 'https://bnkd.xyz/img/db.png',
                 description: 'DoneBetter is the place for the best general entertainment shows.',
                 gradient: 'linear-gradient(145deg, rgba(52, 140, 235,0.7) 0%, rgba(70, 52, 235,0.7) 100%)',
                 genre: 'Entertainment, Family, Animation',
@@ -639,7 +639,7 @@
                 id: 'dcdb',
                 name: 'Disney Channel DoneBetter',
                 streamUrl: 'https://us.bnkd.xyz/live/dcdb.m3u8',
-                iconUrl: 'https://chnl.bnkd.xyz/img/dcdb.png',
+                iconUrl: 'https://bnkd.xyz/img/dcdb.png',
                 description: 'Disney Channel DoneBetter is a replica of Disney Channel, airing non-stop fun across the weekends!',
                 gradient: 'linear-gradient(145deg, rgba(92, 235, 52,0.7) 0%, rgba(52, 235, 186,0.7) 100%)',
                 genre: 'Kids, Family, Animation',
@@ -653,7 +653,7 @@
                 id: 'ccdb',
                 name: 'Comedy Central DoneBetter',
                 streamUrl: 'https://us.bnkd.xyz/live/ccdb.m3u8',
-                iconUrl: 'https://chnl.bnkd.xyz/img/ccdb.png',
+                iconUrl: 'https://bnkd.xyz/img/ccdb.png',
                 description: 'Comedy Central DB gets your weekend started with non-stop LOLs!',
                 gradient: 'linear-gradient(145deg, rgba(235, 180, 52,0.7) 0%, rgba(235, 220, 52,0.7) 100%)',
                 genre: 'Comedy, Stand-up, Sketch',
