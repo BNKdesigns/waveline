@@ -432,10 +432,6 @@
 </head>
 <body class="bg-black min-h-screen flex flex-col">
     <div class="relative w-full h-screen">
-        <div id="startupPage" class="absolute inset-0 z-10">
-            <iframe src="https://bnkd.xyz" class="w-full h-full border-0"></iframe>
-        </div>
-
         <div id="videoContainer" class="absolute inset-0 hidden">
             <video id="videoPlayer" class="w-full h-full object-contain" loop></video>
             <div id="channelInfo" class="absolute top-4 left-4 text-white px-6 py-4 rounded-2xl hidden shadow-2xl transform transition-all duration-300 opacity-0 -translate-y-2 backdrop-blur-xl border border-white/10">
@@ -559,8 +555,6 @@
             const fullscreenBtn = document.getElementById('fullscreenBtn');
             const infoBtn = document.getElementById('infoBtn');
 
-            const startupPage = document.getElementById('startupPage');
-
             const channelInfoPopup = document.getElementById('channelInfoPopup');
             const closeInfoBtn = document.getElementById('closeInfoBtn');
             const channelNameEl = document.getElementById('channelName');
@@ -600,7 +594,6 @@
             }
 
             function showVideoPlayer() {
-                startupPage.classList.add('hidden');
                 videoContainer.classList.remove('hidden');
 
                 document.querySelectorAll('.player-controls button').forEach(button => {
