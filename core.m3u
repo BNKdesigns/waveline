@@ -13,6 +13,8 @@ https://us.bnkd.xyz/live/nook.m3u8
 https://us.bnkd.xyz/live/cnextras.m3u8
 #EXTINF:-1 tvg-id="cnmulti" tvg-name="Cartoon Network Multi" tvg-logo="https://bnkd.xyz/img/cnmulti.png",Cartoon Network Multi
 https://us.bnkd.xyz/live/multi.m3u8
+#EXTINF:-1 tvg-id="window" tvg-name="Window TV" tvg-logo="https://bnkd.xyz/img/window.png",Window TV
+https://us.bnkd.xyz/live/window.m3u8
 #EXTINF:-1 tvg-id="db" tvg-name="DoneBetter" tvg-logo="https://bnkd.xyz/img/db.png",DoneBetter
 https://us.bnkd.xyz/live/db.m3u8
 #EXTINF:-1 tvg-id="dcdb" tvg-name="Disney Channel DoneBetter" tvg-logo="https://bnkd.xyz/img/dcdb.png",Disney Channel DoneBetter
