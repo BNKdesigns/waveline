@@ -1,0 +1,24 @@
+#EXTM3U
+#EXTINF:-1 tvg-id="soul" tvg-name="EEL Channel" tvg-logo="https://bnkd.xyz/img/soul.png",EEL Channel
+https://us.bnkd.xyz/live/soul.m3u8
+#EXTINF:-1 tvg-id="spark" tvg-name="spark" tvg-logo="https://bnkd.xyz/img/spark.png"
+#EXTINF:-1 tvg-id="eel" tvg-name="EEL Channel" tvg-logo="https://bnkd.xyz/img/eel.png",EEL Channel
+https://cdn.webvision.fun/memfs/6193a8f9-103d-4bdf-99f3-e563b748037b.m3u8
+#EXTINF:-1 tvg-id="spark" tvg-name="spark" tvg-logo="https://bnkd.xyz/img/spark.png",spark
+https://us.bnkd.xyz/live/spark.m3u8
+#EXTINF:-1 tvg-id="magical" tvg-name="MagicalTV" tvg-logo="https://bnkd.xyz/img/magicaltv.png",MagicalTV
+https://us.bnkd.xyz/live/magical.m3u8
+#EXTINF:-1 tvg-id="cubby" tvg-name="Cubby" tvg-logo="https://bnkd.xyz/img/cubby.png",Cubby
+https://us.bnkd.xyz/live/cubby.m3u8
+#EXTINF:-1 tvg-id="nook" tvg-name="Nook" tvg-logo="https://bnkd.xyz/img/nook.png",Nook
+https://us.bnkd.xyz/live/nook.m3u8
+#EXTINF:-1 tvg-id="cnextras" tvg-name="Cartoon Network Extras" tvg-logo="https://bnkd.xyz/img/cnextras.png",Cartoon Network Extras
+https://us.bnkd.xyz/live/cnextras.m3u8
+#EXTINF:-1 tvg-id="cnmulti" tvg-name="Cartoon Network Multi" tvg-logo="https://bnkd.xyz/img/cnmulti.png",Cartoon Network Multi
+https://us.bnkd.xyz/live/multi.m3u8
+#EXTINF:-1 tvg-id="db" tvg-name="DoneBetter" tvg-logo="https://bnkd.xyz/img/db.png",DoneBetter
+https://us.bnkd.xyz/live/db.m3u8
+#EXTINF:-1 tvg-id="dcdb" tvg-name="Disney Channel DoneBetter" tvg-logo="https://bnkd.xyz/img/dcdb.png",Disney Channel DoneBetter
+https://us.bnkd.xyz/live/dcdb.m3u8
+#EXTINF:-1 tvg-id="ccdb" tvg-name="Comedy Central DoneBetter" tvg-logo="https://bnkd.xyz/img/ccdb.png",Comedy Central DoneBetter
+https://us.bnkd.xyz/live/ccdb.m3u8
