@@ -858,5 +858,71 @@
             resetNavbarTimeout();
         });
     </script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC610nRbtWUbX7S5wEYU_msFD7S37ulR-8",
+  authDomain: "waveline-b2180.firebaseapp.com",
+  projectId: "waveline-b2180",
+  storageBucket: "waveline-b2180.firebasestorage.app",
+  messagingSenderId: "588366922721",
+  appId: "1:588366922721:web:340f4521ac496cea1dc8a0",
+  measurementId: "G-QWPDL4TR93"
+};
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+</script>
+<script>
+const viewerCountRef = db.collection('channels').doc('cnextras');
+const viewerCountElement = document.getElementById('viewerCountTransient');
+
+function handleViewerCount(channelId) {
+    if (currentChannelId) {
+        db.collection('channels').doc(currentChannelId).update({
+            viewerCount: firebase.firestore.FieldValue.increment(-1)
+        });
+    }
+
+    viewerCountRef.update({
+        viewerCount: firebase.firestore.FieldValue.increment(1)
+    });
+
+    viewerCountRef.onSnapshot((doc) => {
+        if (doc.exists) {
+            const viewerCount = doc.data().viewerCount;
+            viewerCountElement.textContent = `${viewerCount} viewers`;
+        } else {
+            viewerCountElement.textContent = '0 viewers';
+        }
+    });
+}
+
+function handleChannelClick(channelData, buttonElement) {
+    document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
+    buttonElement.classList.add('active');
+
+    if (videoContainer.classList.contains('hidden')) {
+        showVideoPlayer();
+    }
+
+    if (currentChannelId !== channelData.id) {
+        handleViewerCount(channelData.id);
+        currentChannelId = channelData.id;
+        currentChannelData = channelData;
+        loadStream(channelData.streamUrl);
+        updateMainChannelInfoDisplay(channelData);
+        showTransientChannelInfo(channelData);
+    }
+}
+
+window.addEventListener('beforeunload', () => {
+    if (currentChannelId) {
+        db.collection('channels').doc(currentChannelId).update({
+            viewerCount: firebase.firestore.FieldValue.increment(-1)
+        });
+    }
+});
+</script>
 </body>
 </html>
