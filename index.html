@@ -7,7 +7,7 @@
     <link rel="icon" type="image/x-icon" href="https://bnkd.xyz/waveline.png" />
     <script src="https://cdn.tailwindcss.com"></script>
     <script async data-id="101489443" src="//static.getclicky.com/js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <meta property="og:type" content="website">
     <meta property="og:title" content="waveline">
     <meta property="og:description" content="temporary webchnl replacement">
@@ -18,13 +18,13 @@
     <meta name="twitter:image" content="https://bnkd.xyz/wavelinebanner.png">
     <link rel="manifest" href="/manifest.json">
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <!-- Marked.js for Markdown parsing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
         body {
             font-family: "Work Sans", sans-serif;
             background-color: #000;
+            overflow: hidden;
         }
         .navbar {
             backdrop-filter: blur(20px) saturate(200%);
@@ -341,7 +341,7 @@
         }
 
         .info-section .markdown-content p {
-            margin-bottom: 0.5em; 
+            margin-bottom: 0.5em;
         }
         .info-section .markdown-content ul,
         .info-section .markdown-content ol {
@@ -418,7 +418,7 @@
             #channelInfo .channel-description {
                 font-size: 0.8rem;
             }
-             .info-section h3 {
+            .info-section h3 {
                 font-size: 1rem;
             }
             .info-section p, .info-section a {
@@ -448,7 +448,9 @@
                         <p id="channelDescriptionTransient" class="channel-description"></p>
                     </div>
                 </div>
-                <div id="channelProgressBg" class="absolute bottom-0 left-0 right-0 h-1.5 rounded-b-2xl overflow-hidden">
+                <div id="channelProgressBg" class="absolute bottom-0 left: 0;
+ right: 0;
+ height: 1.5 rounded-b-2xl overflow-hidden">
                     <div id="progressBar" class="h-full transition-all duration-15000 ease-linear" style="width: 100%"></div>
                 </div>
             </div>
@@ -524,13 +526,15 @@
         const transientInfoDisplayDuration = 10000;
         let navbarTimeout;
         let transientInfoTimeout;
-        const fallbackVideoUrl = 'https://bnkd.xyz/offline.mp4';
+
+        const defaultFallbackVideoUrl = 'https://bnkd.xyz/offline.mp4';
 
         const channelsData = [
             {
                 id: 'wavelive',
                 name: 'Waveline VIEW',
                 streamUrl: 'https://irn.bnkd.xyz/live/wavelineview.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/waveliveoffline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/wavelineview.png',
                 description: 'Welcome to waveline!',
                 gradient: 'linear-gradient(145deg, rgba(52, 140, 235,0.7) 0%, rgba(70, 52, 235,0.7) 100%)',
@@ -542,6 +546,7 @@
                 id: 'eel',
                 name: 'Eel Channel',
                 streamUrl: 'https://cdn.webvision.fun/memfs/6193a8f9-103d-4bdf-99f3-e563b748037b.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/eel.png',
                 description: 'cartoons that will hit you. hard.',
                 gradient: 'linear-gradient(145deg, rgba(111,11,222,0.7) 0%, rgba(222,11,111,0.7) 100%)',
@@ -553,6 +558,7 @@
                 id: 'spark',
                 name: 'spark',
                 streamUrl: 'https://us.bnkd.xyz/live/spark.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/spark.png',
                 description: 'welcome to spark, feel free to watch',
                 gradient: 'linear-gradient(145deg, rgba(155, 52, 235,0.7) 0%, rgba(52, 113, 235,0.7) 100%)',
@@ -570,6 +576,7 @@
                 id: 'magical',
                 name: 'MagicalTV',
                 streamUrl: 'https://us.bnkd.xyz/live/magical.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/magicaltv.png',
                 description: 'MagicalTV is a webchannel that focuses on giving you some of the most magical shows and movies out there.',
                 gradient: 'linear-gradient(145deg, rgba(252, 3, 128,0.7) 0%, rgba(255, 0, 208,0.7) 100%)',
@@ -583,6 +590,7 @@
                 id: 'cubby',
                 name: 'Cubby',
                 streamUrl: 'https://us.bnkd.xyz/live/cubby.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/cubby.png',
                 description: 'An Cozy Channel for Kids!',
                 gradient: 'linear-gradient(145deg, rgba(252, 3, 128,0.7) 0%, rgba(255, 0, 208,0.7) 100%)',
@@ -590,12 +598,13 @@
                 socialMedia: {
                     instagram: 'https://www.instagram.com/cubby_tv'
                 },
-                additionalInfo: 'Welcome to Cubby – a Cozy Channel for Kids!\n\n\n\nCubby is a colorful, kid-powered webchannel where curiosity leads the way and every day feels like a playdate! Built just for preschoolers and early learners, Cubby is packed with safe, silly, and smart programming that kids love—and parents trust.\n\n\n\nWhether it is racing through town with the pups of PAW Patrol, solving puzzles with Blue’s Clues & You!, or cooking up giggles with The Tiny Chef Show, there’s always something exciting waiting to be discovered. From the musical fun of Barney’s World and Bubble Guppies to the STEM-powered adventures of Blaze & the Monster Machines and Mecha Builders, Cubby brings learning to life with stories that stick and characters that care.\n\n\n\nKids can dance along with Bluey, giggle with Peppa Pig, and join superhero teams like Spidey and his Amazing Friends, and Iron Man and his Awesome Friends—all while building big hearts and bright minds.\n\n\n\nAnd with beloved classics like Sesame Street, Curious George, and Mickey Mouse Clubhouse, alongside fresh faces like WonderBlocks, Carl the Collector, and Wordsville, Cubby blends timeless favorites with today’s most engaging shows in one delightful, easy-to-watch space.\n\n\n\nCubby is a playful, positive world where little viewers feel seen, heard, and celebrated.\n\n\n\nSafe. Creative. Smart. Totally Cubby.'
+                additionalInfo: 'Welcome to Cubby – a Cozy Channel for Kids!\n\n\n\nCubby is a colorful, kid-powered webchannel where curiosity leads the way and every day feels like a playdate! Built just for preschoolers and early learners, Cubby is packed with safe, silly, and smart programming that kids love—and parents trust.\n\n\n\nWhether it is racing through town with the pups of PAW Patrol, solving puzzles with Blue’s Clues & You!, or cooking up giggles with The Tiny Chef Show, there’s always something exciting waiting to be discovered. From the musical fun of Barney’s World and Bubble Guppies to the STEM-powered adventures of Blaze & the Monster Machines and Mecha Builders, Cubby brings learning to life with stories that stick and characters that care.\n\n\n\nAnd with beloved classics like Sesame Street, Curious George, and Mickey Mouse Clubhouse, alongside fresh faces like WonderBlocks, Carl the Collector, and Wordsville, Cubby blends timeless favorites with today’s most engaging shows in one delightful, easy-to-watch space.\n\n\n\nCubby is a playful, positive world where little viewers feel seen, heard, and celebrated.\n\n\n\nSafe. Creative. Smart. Totally Cubby.'
             },
             {
                 id: 'nook',
                 name: 'Nook',
                 streamUrl: 'https://us.bnkd.xyz/live/nook.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/nook.png',
                 description: 'Big Laughs, Big Adventures, Big Energy',
                 gradient: 'linear-gradient(145deg, rgba(252, 3, 128,0.7) 0%, rgba(255, 0, 208,0.7) 100%)',
@@ -609,6 +618,7 @@
                 id: 'cnextras',
                 name: 'Cartoon Network Extras',
                 streamUrl: 'https://us.bnkd.xyz/live/cnextras.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/cnextras.png',
                 description: 'CN Extras is a network relived by the Cartoon Network USA Check It 3.0 era.',
                 gradient: 'linear-gradient(145deg, rgba(237, 237, 237,0.7) 0%, rgba(181, 181, 181,0.7) 100%)',
@@ -621,6 +631,7 @@
                 id: 'cnmulti',
                 name: 'Cartoon Network Multi',
                 streamUrl: 'https://us.bnkd.xyz/live/multi.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/cnmulti.png',
                 description: 'CN Multi is a network relived by the Cartoon Network.',
                 gradient: 'linear-gradient(145deg, rgba(255, 200, 0,0.7) 0%, rgba(212, 255, 0,0.7) 100%)',
@@ -633,6 +644,7 @@
                 id: 'window',
                 name: 'Window TV',
                 streamUrl: 'https://us.bnkd.xyz/live/window.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/window.png',
                 description: 'Certified Professional Window Installing Service!',
                 gradient: 'linear-gradient(145deg, rgba(255, 200, 0,0.7) 0%, rgba(212, 255, 0,0.7) 100%)',
@@ -645,6 +657,7 @@
                 id: 'db',
                 name: 'DoneBetter',
                 streamUrl: 'https://us.bnkd.xyz/live/db.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/db.png',
                 description: 'DoneBetter is the place for the best general entertainment shows.',
                 gradient: 'linear-gradient(145deg, rgba(52, 140, 235,0.7) 0%, rgba(70, 52, 235,0.7) 100%)',
@@ -653,12 +666,13 @@
                     discord: 'https://discord.gg/QAn8WurDRV',
                     schedule: 'https://donebetter.fandom.com/wiki/Recent_Page',
                 },
-                additionalInfo: 'Airing:\n\n\n\n•  12am to 6am BST (Sat)\n\n•  12pm to 6am BST (Sat/Sun)\n\n•  6pm to 11pm BST (Sun)!'
+                additionalInfo: 'Airing:\n\n\n\n•  12am to 6am BST (Sat)\n\n•  12pm to 6am BST (Sat/Sun)\n\n•  6pm to 11pm BST (Sun)!'
             },
             {
                 id: 'dcdb',
                 name: 'Disney Channel DoneBetter',
                 streamUrl: 'https://us.bnkd.xyz/live/dcdb.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/dcdb.png',
                 description: 'Disney Channel DoneBetter is a replica of Disney Channel, airing non-stop fun across the weekends!',
                 gradient: 'linear-gradient(145deg, rgba(92, 235, 52,0.7) 0%, rgba(52, 235, 186,0.7) 100%)',
@@ -667,12 +681,13 @@
                     discord: 'https://discord.gg/VEB3stmdnw',
                     schedule: 'https://donebetter.fandom.com/wiki/Recent_Page'
                 },
-                additionalInfo: 'Airing:\n\n\n\n•  6am to 12pm BST (Sat)\n\n•  6am to 6pm BST (Sun)'
+                additionalInfo: 'Airing:\n\n\n\n•  6am to 12pm BST (Sat)\n\n•  6am to 6pm BST (Sun)'
             },
             {
                 id: 'ccdb',
                 name: 'Comedy Central DoneBetter',
                 streamUrl: 'https://us.bnkd.xyz/live/ccdb.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
                 iconUrl: 'https://bnkd.xyz/img/ccdb.png',
                 description: 'Comedy Central DB gets your weekend started with non-stop LOLs!',
                 gradient: 'linear-gradient(145deg, rgba(235, 180, 52,0.7) 0%, rgba(235, 220, 52,0.7) 100%)',
@@ -681,7 +696,7 @@
                     discord: 'https://discord.gg/QAn8WurDRV',
                     schedule: 'https://donebetter.fandom.com/wiki/Recent_Page'
                 },
-                additionalInfo: 'Airing:\n\n\n\n•  6pm to 12am BST (Fri)'
+                additionalInfo: 'Airing:\n\n\n\n•  6pm to 12am BST (Fri)'
             }
         ];
 
@@ -721,9 +736,11 @@
             const channelIconBgTransientEl = document.getElementById('channelIconBgTransient');
             const progressBar = document.getElementById('progressBar');
 
-            let hls = new Hls();
-            let currentChannelId = null;
-            let currentChannelData = null;
+            let hls = null;
+            let currentChannel = null;
+            let isPlaying = false;
+            let isMuted = false;
+            let lastActivityTime = Date.now();
 
             function resetNavbarTimeout() {
                 clearTimeout(navbarTimeout);
@@ -733,274 +750,236 @@
                 }, navbarHideDelay);
             }
 
-            function showVideoPlayer() {
-                videoContainer.classList.remove('hidden');
-
-                document.querySelectorAll('.player-controls button').forEach(button => {
-                    button.disabled = false;
-                    button.classList.remove('disabled');
-                });
-                resetNavbarTimeout();
-            }
-
-            function loadStream(url) {
-                if (Hls.isSupported()) {
-                    hls.destroy();
-                    hls = new Hls();
-                    hls.loadSource(url);
-                    hls.attachMedia(videoPlayer);
-                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                        videoPlayer.play();
-                        updatePlayPauseIcon();
-                    });
-                    hls.on(Hls.Events.ERROR, function(event, data) {
-                        if (data.fatal) {
-                            console.error('HLS fatal error, attempting to load fallback MP4:', data);
-                            videoPlayer.src = fallbackVideoUrl;
-                            videoPlayer.load();
-                            videoPlayer.play();
-                            updatePlayPauseIcon();
-                        }
-                    });
-                } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
-                    videoPlayer.src = url;
-                    videoPlayer.addEventListener('loadedmetadata', function() {
-                        videoPlayer.play();
-                        updatePlayPauseIcon();
-                    });
-                    videoPlayer.addEventListener('error', function() {
-                        console.error('Native HLS playback error, attempting to load fallback MP4.');
-                        videoPlayer.src = fallbackVideoUrl;
-                        videoPlayer.load();
-                        videoPlayer.play();
-                        updatePlayPauseIcon();
-                    }, { once: true });
-                } else {
-                    console.error('HLS is not supported in this browser and native HLS playback is not available. Loading fallback MP4.');
-                    videoPlayer.src = fallbackVideoUrl;
-                    videoPlayer.load();
-                    videoPlayer.play();
-                    updatePlayPauseIcon();
-                }
-            }
-
-            function updatePlayPauseIcon() {
-                const icon = playPauseBtn.querySelector('i');
-                if (videoPlayer.paused) {
-                    icon.classList.remove('fa-pause');
-                    icon.classList.add('fa-play');
-                } else {
-                    icon.classList.remove('fa-play');
-                    icon.classList.add('fa-pause');
-                }
-            }
-
-            function updateMuteIcon() {
-                const icon = muteBtn.querySelector('i');
-                if (videoPlayer.muted || videoPlayer.volume === 0) {
-                    icon.classList.remove('fa-volume-up');
-                    icon.classList.add('fa-volume-mute');
-                } else {
-                    icon.classList.remove('fa-volume-mute');
-                    icon.classList.add('fa-volume-up');
-                }
-            }
-
-            function updateMainChannelInfoDisplay(channelData) {
-                channelNameEl.textContent = channelData.name;
-                const channelIndex = channelsData.findIndex(c => c.id === channelData.id);
-                channelNumberEl.textContent = '#' + (channelIndex + 1);
-                channelDescriptionEl.textContent = channelData.description;
-                channelIconEl.src = channelData.iconUrl;
-                channelIconEl.alt = channelData.name + ' Logo';
-                channelIconBgEl.style.background = channelData.gradient;
-
-                if (channelData.genre) {
-                    channelGenreEl.textContent = channelData.genre;
-                    channelGenreSection.classList.remove('hidden');
-                } else {
-                    channelGenreSection.classList.add('hidden');
-                }
-
-                if (channelData.website) {
-                    channelWebsiteEl.href = channelData.website;
-                    channelWebsiteEl.textContent = channelData.website.replace(/(^\w+:|^)\/\//, '');
-                    channelWebsiteSection.classList.remove('hidden');
-                } else {
-                    channelWebsiteSection.classList.add('hidden');
-                }
-
-                channelSocialMediaEl.innerHTML = '';
-                if (channelData.socialMedia && Object.keys(channelData.socialMedia).length > 0) {
-                    for (const platform in channelData.socialMedia) {
-                        const url = channelData.socialMedia[platform];
-                        const iconClass = {
-                            twitter: 'fa-brands fa-twitter',
-                            instagram: 'fa-brands fa-instagram',
-                            facebook: 'fa-brands fa-facebook',
-                            youtube: 'fa-brands fa-youtube',
-                            discord: 'fa-brands fa-discord',
-                            threads: 'fa-brands fa-threads',
-                            bluesky: 'fa-brands fa-bluesky',
-                            schedule: 'fa-solid fa-calendar-days',
-                            vanillo: 'fa-solid fa-tv'
-                        }[platform] || 'fa-solid fa-link';
-
-                        const link = document.createElement('a');
-                        link.href = url;
-                        link.target = '_blank';
-                        link.rel = 'noopener noreferrer';
-                        link.innerHTML = `<i class="${iconClass}"></i>`;
-                        channelSocialMediaEl.appendChild(link);
-                    }
-                    channelSocialMediaSection.classList.remove('hidden');
-                } else {
-                    channelSocialMediaSection.classList.add('hidden');
-                }
-
-                if (channelData.additionalInfo) {
-                    channelAdditionalInfoEl.innerHTML = marked.parse(channelData.additionalInfo);
-                    channelAdditionalInfoSection.classList.remove('hidden');
-                } else {
-                    channelAdditionalInfoSection.classList.add('hidden');
-                }
-            }
-
-            function showTransientChannelInfo(channelData) {
+            function showTransientChannelInfo() {
                 clearTimeout(transientInfoTimeout);
-
-                channelNameTransientEl.textContent = channelData.name;
-                const channelIndex = channelsData.findIndex(c => c.id === channelData.id);
-                channelNumberTransientEl.textContent = '#' + (channelIndex + 1);
-                channelDescriptionTransientEl.textContent = channelData.description;
-                channelIconTransientEl.src = channelData.iconUrl;
-                channelIconTransientEl.alt = channelData.name + ' Logo';
-                channelIconBgTransientEl.style.background = channelData.gradient;
-
-                channelInfoTransient.classList.remove('hidden', 'opacity-0', '-translate-y-2');
                 channelInfoTransient.classList.add('show');
-
-                progressBar.style.transition = 'none';
-                progressBar.style.width = '100%';
-                void progressBar.offsetWidth;
-                progressBar.style.transition = `width ${transientInfoDisplayDuration / 1000}s linear`;
-
-                setTimeout(() => {
-                    progressBar.style.width = '0%';
-                }, 50);
-
                 transientInfoTimeout = setTimeout(() => {
                     channelInfoTransient.classList.remove('show');
-                    setTimeout(() => {
-                        channelInfoTransient.classList.add('hidden');
-                    }, 300);
                 }, transientInfoDisplayDuration);
             }
 
+            function updateProgressBar() {
+                progressBar.style.transition = 'none';
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    progressBar.style.transition = `width ${transientInfoDisplayDuration / 1000}s linear`;
+                    progressBar.style.width = '0%';
+                }, 50);
+            }
 
-            function handleChannelClick(channelData, buttonElement) {
-                document.querySelectorAll('.channel-btn').forEach(btn => btn.classList.remove('active'));
-                buttonElement.classList.add('active');
+            document.addEventListener('mousemove', resetNavbarTimeout);
+            document.addEventListener('keydown', resetNavbarTimeout);
+            document.addEventListener('click', resetNavbarTimeout);
+            document.addEventListener('scroll', resetNavbarTimeout);
+            document.addEventListener('touchstart', resetNavbarTimeout);
 
-                if (videoContainer.classList.contains('hidden')) {
-                    showVideoPlayer();
+            resetNavbarTimeout();
+
+            function togglePlayerControls(enable) {
+                playPauseBtn.disabled = !enable;
+                muteBtn.disabled = !enable;
+                fullscreenBtn.disabled = !enable;
+                infoBtn.disabled = !enable;
+
+                if (enable) {
+                    playPauseBtn.classList.remove('disabled');
+                    muteBtn.classList.remove('disabled');
+                    fullscreenBtn.classList.remove('disabled');
+                    infoBtn.classList.remove('disabled');
+                } else {
+                    playPauseBtn.classList.add('disabled');
+                    muteBtn.classList.add('disabled');
+                    fullscreenBtn.classList.add('disabled');
+                    infoBtn.classList.add('disabled');
+                }
+            }
+
+            togglePlayerControls(false);
+
+            function loadChannel(channel) {
+                if (hls) {
+                    hls.destroy();
                 }
 
-                if (currentChannelId !== channelData.id) {
-                    currentChannelId = channelData.id;
-                    currentChannelData = channelData;
-                    loadStream(channelData.streamUrl);
-                    updateMainChannelInfoDisplay(channelData);
-                    showTransientChannelInfo(channelData);
+                currentChannel = channel;
+                videoContainer.classList.remove('hidden');
+
+                channelNameTransientEl.textContent = channel.name;
+                channelNumberTransientEl.textContent = `#${channelsData.indexOf(channel) + 1}`;
+                channelDescriptionTransientEl.textContent = channel.description;
+                channelIconTransientEl.src = channel.iconUrl;
+                channelIconBgTransientEl.style.background = channel.gradient;
+                channelInfoTransient.classList.remove('hidden');
+
+                showTransientChannelInfo();
+                updateProgressBar();
+
+                if (Hls.isSupported()) {
+                    hls = new Hls();
+                    hls.loadSource(channel.streamUrl);
+                    hls.attachMedia(videoPlayer);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        videoPlayer.play();
+                        isPlaying = true;
+                        playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                        togglePlayerControls(true);
+                    });
+                    hls.on(Hls.Events.ERROR, function(event, data) {
+                        if (data.fatal) {
+                            console.error('HLS fatal error:', data);
+                            videoPlayer.src = channel.fallbackVideoUrl || defaultFallbackVideoUrl;
+                            videoPlayer.play();
+                            isPlaying = true;
+                            playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                            togglePlayerControls(true);
+                            console.warn(`Falling back to MP4 for channel: ${channel.name}`);
+                        }
+                    });
+                } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                    videoPlayer.src = channel.streamUrl;
+                    videoPlayer.addEventListener('loadedmetadata', function() {
+                        videoPlayer.play();
+                        isPlaying = true;
+                        playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                        togglePlayerControls(true);
+                    });
+                    videoPlayer.addEventListener('error', () => {
+                        videoPlayer.src = channel.fallbackVideoUrl || defaultFallbackVideoUrl;
+                        videoPlayer.play();
+                        isPlaying = true;
+                        playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                        togglePlayerControls(true);
+                        console.warn(`Falling back to MP4 for channel (native HLS error): ${channel.name}`);
+                    });
+                } else {
+                    videoPlayer.src = channel.fallbackVideoUrl || defaultFallbackVideoUrl;
+                    videoPlayer.play();
+                    isPlaying = true;
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                    togglePlayerControls(true);
+                    console.warn(`Directly playing MP4 fallback for channel (HLS not supported): ${channel.name}`);
                 }
+
+                document.querySelectorAll('.channel-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById(`channel-btn-${channel.id}`).classList.add('active');
             }
 
             channelsData.forEach((channel, index) => {
                 const button = document.createElement('button');
-                button.className = 'channel-btn flex items-center justify-center p-2 rounded-full bg-black bg-opacity-20 hover:bg-opacity-40 transition-all duration-300 w-10 h-10';
-                button.setAttribute('data-channel-id', channel.id);
-
-                const img = document.createElement('img');
-                img.src = channel.iconUrl;
-                img.alt = channel.name + ' Logo';
-                img.className = 'w-full h-full object-contain';
-
-                button.appendChild(img);
+                button.id = `channel-btn-${channel.id}`;
+                button.className = 'channel-btn p-3 aspect-square rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 transition-all w-10 h-10 flex items-center justify-center';
+                button.innerHTML = `<img src="${channel.iconUrl}" alt="${channel.name}" class="w-full h-full object-contain rounded-full">`;
+                button.title = channel.name;
+                button.onclick = () => loadChannel(channel);
                 channelsContainer.appendChild(button);
-                button.addEventListener('click', () => handleChannelClick(channel, button));
             });
 
-            playPauseBtn.addEventListener('click', function() {
+            playPauseBtn.addEventListener('click', () => {
                 if (videoPlayer.paused) {
                     videoPlayer.play();
+                    isPlaying = true;
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
                 } else {
                     videoPlayer.pause();
+                    isPlaying = false;
+                    playPauseBtn.innerHTML = '<i class="fas fa-play text-white"></i>';
                 }
-                updatePlayPauseIcon();
             });
 
-            muteBtn.addEventListener('click', function() {
+            muteBtn.addEventListener('click', () => {
                 videoPlayer.muted = !videoPlayer.muted;
-                updateMuteIcon();
+                isMuted = videoPlayer.muted;
+                muteBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute text-white"></i>' : '<i class="fas fa-volume-up text-white"></i>';
             });
 
-            fullscreenBtn.addEventListener('click', function() {
-                if (!document.fullscreenElement) {
-                    if (videoContainer.requestFullscreen) {
-                        videoContainer.requestFullscreen();
-                    } else if (videoContainer.webkitRequestFullscreen) {
-                        videoContainer.webkitRequestFullscreen();
-                    } else if (videoContainer.msRequestFullscreen) {
-                        videoContainer.msRequestFullscreen();
-                    }
-                    this.querySelector('i').classList.remove('fa-expand');
-                    this.querySelector('i').classList.add('fa-compress');
-                } else {
-                    if (document.exitFullscreen) {
-                        document.exitFullscreen();
-                    } else if (document.webkitExitFullscreen) {
-                        document.webkitExitFullscreen();
-                    } else if (document.msExitFullscreen) {
-                        document.msExitFullscreen();
-                    }
-                    this.querySelector('i').classList.remove('fa-compress');
-                    this.querySelector('i').classList.add('fa-expand');
+            fullscreenBtn.addEventListener('click', () => {
+                if (videoContainer.requestFullscreen) {
+                    videoContainer.requestFullscreen();
+                } else if (videoContainer.mozRequestFullScreen) {
+                    videoContainer.mozRequestFullScreen();
+                } else if (videoContainer.webkitRequestFullscreen) {
+                    videoContainer.webkitRequestFullscreen();
+                } else if (videoContainer.msRequestFullscreen) {
+                    videoContainer.msRequestFullscreen();
                 }
             });
 
-            infoBtn.addEventListener('click', function() {
-                if (currentChannelData) {
-                    updateMainChannelInfoDisplay(currentChannelData);
-                    channelInfoPopup.classList.remove('hidden');
-                    setTimeout(() => {
-                        channelInfoPopup.classList.add('show');
-                    }, 10);
+            infoBtn.addEventListener('click', () => {
+                if (currentChannel) {
+                    channelNameEl.textContent = currentChannel.name;
+                    channelNumberEl.textContent = `#${channelsData.indexOf(currentChannel) + 1}`;
+                    channelDescriptionEl.textContent = currentChannel.description;
+                    channelIconEl.src = currentChannel.iconUrl;
+                    channelIconBgEl.style.background = currentChannel.gradient;
+
+                    if (currentChannel.genre) {
+                        channelGenreSection.classList.remove('hidden');
+                        channelGenreEl.textContent = currentChannel.genre;
+                    } else {
+                        channelGenreSection.classList.add('hidden');
+                    }
+
+                    if (currentChannel.website) {
+                        channelWebsiteSection.classList.remove('hidden');
+                        channelWebsiteEl.href = currentChannel.website;
+                        channelWebsiteEl.textContent = currentChannel.website.replace(/(^\w+:|^)\/\//, '');
+                    } else {
+                        channelWebsiteSection.classList.add('hidden');
+                    }
+
+                    if (currentChannel.socialMedia && Object.keys(currentChannel.socialMedia).length > 0) {
+                        channelSocialMediaSection.classList.remove('hidden');
+                        channelSocialMediaEl.innerHTML = '';
+                        for (const platform in currentChannel.socialMedia) {
+                            const url = currentChannel.socialMedia[platform];
+                            const iconClass = {
+                                discord: 'fab fa-discord',
+                                twitter: 'fab fa-twitter',
+                                threads: 'fab fa-threads',
+                                bluesky: 'fa-solid fa-cloud',
+                                vanillo: 'fa-solid fa-tv',
+                                instagram: 'fab fa-instagram',
+                                schedule: 'fa-solid fa-calendar-alt'
+                            }[platform] || 'fas fa-link';
+
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.target = '_blank';
+                            link.rel = 'noopener noreferrer';
+                            link.innerHTML = `<i class="${iconClass}"></i>`;
+                            link.title = platform.charAt(0).toUpperCase() + platform.slice(1);
+                            channelSocialMediaEl.appendChild(link);
+                        }
+                    } else {
+                        channelSocialMediaSection.classList.add('hidden');
+                    }
+
+                    if (currentChannel.additionalInfo) {
+                        channelAdditionalInfoSection.classList.remove('hidden');
+                        channelAdditionalInfoEl.innerHTML = marked.parse(currentChannel.additionalInfo);
+                    } else {
+                        channelAdditionalInfoSection.classList.add('hidden');
+                    }
+
+                    channelInfoPopup.classList.add('show');
                 }
             });
 
-            closeInfoBtn.addEventListener('click', function() {
+            closeInfoBtn.addEventListener('click', () => {
                 channelInfoPopup.classList.remove('show');
-                setTimeout(() => {
-                    channelInfoPopup.classList.add('hidden');
-                }, 300);
             });
 
-            videoPlayer.addEventListener('play', updatePlayPauseIcon);
-            videoPlayer.addEventListener('pause', updatePlayPauseIcon);
-            videoPlayer.addEventListener('volumechange', updateMuteIcon);
+            channelInfoPopup.addEventListener('click', (event) => {
+                if (event.target === channelInfoPopup) {
+                    channelInfoPopup.classList.remove('show');
+                }
+            });
 
             if (channelsData.length > 0) {
-                const firstChannelButton = channelsContainer.querySelector('.channel-btn');
-                if (firstChannelButton) {
-                    handleChannelClick(channelsData[0], firstChannelButton);
-                }
+                loadChannel(channelsData[0]);
             }
-
-            document.body.addEventListener('mousemove', resetNavbarTimeout);
-            document.body.addEventListener('touchstart', resetNavbarTimeout);
-            document.body.addEventListener('touchend', resetNavbarTimeout);
-            document.body.addEventListener('touchmove', resetNavbarTimeout);
-            resetNavbarTimeout();
         });
     </script>
 </body>
