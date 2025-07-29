@@ -1,6 +1,6 @@
 #EXTM3U
 #EXTINF:-1 tvg-id="wavelive" tvg-name="Waveline View" tvg-logo="https://bnkd.xyz/img/waveline.png",Waveline View
-https://irn.bnkd.xyz/live/wavelive.m3u8
+https://irn.bnkd.xyz/live/wavelineview.m3u8
 #EXTINF:-1 tvg-id="eel" tvg-name="EEL Channel" tvg-logo="https://bnkd.xyz/img/eel.png",EEL Channel
 https://cdn.webvision.fun/memfs/6193a8f9-103d-4bdf-99f3-e563b748037b.m3u8
 #EXTINF:-1 tvg-id="spark" tvg-name="spark" tvg-logo="https://bnkd.xyz/img/spark.png",spark
