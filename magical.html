@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>waveline</title>
+    <link rel="icon" type="image/x-icon" href="https://bnkd.xyz/waveline.png" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script async data-id="101489443" src="//static.getclicky.com/js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="waveline">
+    <meta property="og:description" content="temporary webchnl replacement">
+    <meta property="og:image" content="https://bnkd.xyz/wavelinebanner.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="waveline">
+    <meta name="twitter:description" content="temporary webchnl replacement">
+    <meta name="twitter:image" content="https://bnkd.xyz/wavelinebanner.png">
+    <link rel="manifest" href="/manifest.json">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.0/marked.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+        body {
+            font-family: "Work Sans", sans-serif;
+            background-color: #000;
+            overflow: hidden;
+        }
+        .navbar {
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            background: linear-gradient(
+                145deg,
+                rgba(255,255,255,0.3) 0%,
+                rgba(255,255,255,0.1) 50%,
+                rgba(255,255,255,0.05) 100%
+            );
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.2),
+                0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+                0 15px 30px rgba(255, 255, 255, 0.3) inset,
+                0 -15px 30px rgba(0, 0, 0, 0.15) inset,
+                0 0 15px rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.5s ease-in-out;
+            width: 95%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 8px 16px;
+            height: auto;
+            position: fixed;
+            bottom: 20px;
+            z-index: 50;
+            overflow: hidden;
+        }
+        .navbar.hidden-navbar {
+            transform: translateX(-50%) translateY(150%);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            right: -50%;
+            bottom: -50%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255,255,255,0) 0%,
+                rgba(255,255,255,0.1) 50%,
+                rgba(255,255,255,0) 100%
+            );
+            transform: rotate(30deg);
+            animation: shine 6s infinite;
+            pointer-events: none;
+        }
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            20% { transform: translateX(100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+
+        .navbar button {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .navbar button:active {
+            transform: translateY(0);
+        }
+
+        #channelInfo {
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            background: linear-gradient(
+                145deg,
+                rgba(0, 0, 0, 0.7) 0%,
+                rgba(0, 0, 0, 0.5) 50%,
+                rgba(0, 0, 0, 0.3) 100%
+            );
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+                0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            color: white;
+            padding: 16px 24px;
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 40;
+            transform: translateY(-20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-out;
+            max-width: 350px;
+        }
+
+        #channelInfo.show {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #channelInfo .channel-icon-bg {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        #channelInfo .channel-icon {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        #channelInfo .channel-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        #channelInfo .channel-number {
+            font-size: 0.875rem;
+            font-weight: 500;
+            background-color: rgba(0,0,0,0.2);
+            padding: 4px 8px;
+            border-radius: 6px;
+        }
+
+        #channelInfo .channel-description {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.8);
+            margin-top: 4px;
+        }
+
+        #channelProgressBg {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            overflow: hidden;
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        #progressBar {
+            height: 100%;
+            width: 100%;
+            transition: width 10s linear;
+        }
+
+        #channelInfoPopup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        #channelInfoPopup.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #channelInfoContent {
+            backdrop-filter: blur(24px) saturate(200%);
+            -webkit-backdrop-filter: blur(24px) saturate(200%);
+            background: linear-gradient(
+                145deg,
+                rgba(0, 0, 0, 0.7) 0%,
+                rgba(0, 0, 0, 0.5) 50%,
+                rgba(0, 0, 0, 0.3) 100%
+            );
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+                0 10px 15px -3px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            color: white;
+            padding: 24px;
+            position: relative;
+            width: 90%;
+            max-width: 500px;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        #channelInfoPopup.show #channelInfoContent {
+            transform: translateY(0);
+        }
+
+        #channelInfoContent::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.05) 0%,
+                rgba(255, 255, 255, 0.01) 50%,
+                rgba(255, 255, 255, 0.05) 100%
+            );
+            pointer-events: none;
+            z-index: -1;
+            border-radius: inherit;
+        }
+
+        #closeInfoBtn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+            z-index: 10;
+        }
+
+        #closeInfoBtn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .channel-btn.active {
+            background-color: rgba(0, 0, 0, 0.4);
+            transform: scale(1.1);
+        }
+
+        .channel-btn:hover:not(.active) {
+            transform: scale(1.05);
+        }
+
+        .player-container {
+            transition: all 0.3s ease;
+        }
+
+        button.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .info-section {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-section:first-of-type {
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+        }
+
+        .info-section h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .info-section p, .info-section a {
+            font-size: 0.9375rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.5;
+        }
+
+        .info-section a {
+            color: #93c5fd;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .info-section a:hover {
+            color: #bfdbfe;
+            text-decoration: underline;
+        }
+
+        .social-icons a {
+            display: inline-block;
+            margin-right: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.5rem;
+            transition: color 0.2s ease, transform 0.2s ease;
+        }
+
+        .social-icons a:hover {
+            color: #93c5fd;
+            transform: translateY(-2px);
+        }
+
+        .info-section .markdown-content p {
+            margin-bottom: 0.5em;
+        }
+        .info-section .markdown-content ul,
+        .info-section .markdown-content ol {
+            list-style-position: inside;
+            margin-left: 1.25em;
+            margin-bottom: 0.5em;
+        }
+        .info-section .markdown-content li {
+            margin-bottom: 0.25em;
+        }
+        .info-section .markdown-content strong {
+            font-weight: bold;
+            color: rgba(255, 255, 255, 0.9);
+        }
+        .info-section .markdown-content em {
+            font-style: italic;
+        }
+        .info-section .markdown-content a {
+            color: #93c5fd;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .navbar {
+                flex-direction: column;
+                height: auto;
+                gap: 12px;
+                padding: 12px;
+                width: 90%;
+                bottom: 10px;
+            }
+            .channels {
+                flex-direction: row;
+                flex-wrap: wrap;
+                width: 100%;
+                justify-content: center;
+                gap: 8px;
+            }
+            .player-controls {
+                width: 100%;
+                justify-content: space-around;
+                background: rgba(0,0,0,0.2) !important;
+                padding: 8px;
+                border-radius: 24px;
+            }
+            .channel-btn, #playPauseBtn, #muteBtn, #fullscreenBtn, #infoBtn {
+                width: 44px;
+                height: 44px;
+            }
+            #videoContainer {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 80px;
+            }
+            #channelInfoContent {
+                width: 95%;
+                padding: 20px;
+            }
+            #closeInfoBtn {
+                top: 10px;
+                left: 10px;
+            }
+            #channelInfo {
+                top: 10px;
+                left: 10px;
+                max-width: calc(100% - 20px);
+                padding: 12px 16px;
+            }
+            #channelInfo .channel-name {
+                font-size: 1.25rem;
+            }
+            #channelInfo .channel-description {
+                font-size: 0.8rem;
+            }
+            .info-section h3 {
+                font-size: 1rem;
+            }
+            .info-section p, .info-section a {
+                font-size: 0.875rem;
+            }
+            .social-icons a {
+                font-size: 1.25rem;
+                margin-right: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body class="bg-black min-h-screen flex flex-col">
+    <div class="relative w-full h-screen">
+        <div id="videoContainer" class="absolute inset-0 hidden">
+            <video id="videoPlayer" class="w-full h-full object-contain" loop></video>
+            <div id="channelInfo" class="absolute top-4 left-4 text-white px-6 py-4 rounded-2xl hidden shadow-2xl transform transition-all duration-300 opacity-0 -translate-y-2 backdrop-blur-xl border border-white/10">
+                <div class="flex items-start space-x-4">
+                    <div id="channelIconBgTransient" class="channel-icon-bg" style="background: linear-gradient(145deg, rgba(111,11,222,0.7) 0%, rgba(222,11,111,0.7) 100%);">
+                        <img id="channelIconTransient" class="channel-icon" alt="Channel Icon">
+                    </div>
+                    <div class="flex-1">
+                        <div class="flex items-baseline justify-between">
+                            <h2 id="channelNameTransient" class="channel-name"></h2>
+                            <span id="channelNumberTransient" class="channel-number"></span>
+                        </div>
+                        <p id="channelDescriptionTransient" class="channel-description"></p>
+                    </div>
+                </div>
+                <div id="channelProgressBg" class="absolute bottom-0 left: 0;
+ right: 0;
+ height: 1.5 rounded-b-2xl overflow-hidden">
+                    <div id="progressBar" class="h-full transition-all duration-15000 ease-linear" style="width: 100%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="navbar fixed bottom-[20px] z-50 flex items-center justify-between px-6">
+        <div id="channelsContainer" class="channels flex space-x-4 flex-wrap flex-grow min-w-0">
+        </div>
+
+        <div class="player-controls flex items-center space-x-3 bg-opacity-20 rounded-full px-4 py-1 flex-shrink-0">
+            <button id="playPauseBtn" class="p-3 aspect-square rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 transition-all w-10 h-10 flex items-center justify-center disabled" disabled>
+                <i class="fas fa-play text-white"></i>
+            </button>
+
+            <div class="volume-control">
+                <button id="muteBtn" class="p-3 aspect-square rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 transition-all w-10 h-10 flex items-center justify-center disabled" disabled>
+                    <i class="fas fa-volume-up text-white"></i>
+                </button>
+            </div>
+            <button id="fullscreenBtn" class="p-3 aspect-square rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 transition-all w-10 h-10 flex items-center justify-center disabled" disabled>
+                <i class="fas fa-expand text-white"></i>
+            </button>
+            <button id="infoBtn" class="p-3 aspect-square rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 transition-all w-10 h-10 flex items-center justify-center disabled" disabled>
+                <i class="fas fa-info text-white"></i>
+            </button>
+        </div>
+    </div>
+
+    <div id="channelInfoPopup" class="hidden">
+        <div id="channelInfoContent" class="relative">
+            <button id="closeInfoBtn" class="absolute top-4 left-4 text-white hover:text-gray-300">
+                <i class="fas fa-times"></i>
+            </button>
+            <div class="flex items-start space-x-4 mt-6">
+                <div id="channelIconBg" class="w-16 h-16 rounded-xl flex items-center justify-center shadow-lg flex-shrink-0">
+                    <img id="channelIcon" class="w-10 h-10 object-contain" alt="Channel Icon">
+                </div>
+                <div class="flex-1">
+                    <div class="flex items-baseline justify-between">
+                        <h2 id="channelName" class="text-3xl font-bold tracking-tight"></h2>
+                        <span id="channelNumber" class="text-md font-medium bg-black/20 px-3 py-1 rounded-md"></span>
+                    </div>
+                    <p id="channelDescription" class="text-base text-white/80 mt-2"></p>
+                </div>
+            </div>
+
+            <div id="channelGenreSection" class="info-section hidden">
+                <h3>Genre</h3>
+                <p id="channelGenre"></p>
+            </div>
+
+            <div id="channelWebsiteSection" class="info-section hidden">
+                <h3>Website</h3>
+                <p><a id="channelWebsite" href="#" target="_blank" rel="noopener noreferrer"></a></p>
+            </div>
+
+            <div id="channelSocialMediaSection" class="info-section hidden">
+                <h3>Social Media</h3>
+                <div id="channelSocialMedia" class="social-icons flex space-x-4">
+                </div>
+            </div>
+
+            <div id="channelAdditionalInfoSection" class="info-section hidden">
+                <h3>More Information</h3>
+                <div id="channelAdditionalInfo" class="markdown-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const navbarHideDelay = 10000;
+        const transientInfoDisplayDuration = 10000;
+        let navbarTimeout;
+        let transientInfoTimeout;
+
+        const defaultFallbackVideoUrl = 'https://bnkd.xyz/offline.mp4';
+
+        const channelsData = [
+            {
+                id: 'magical',
+                name: 'MagicalTV',
+                streamUrl: 'https://us.bnkd.xyz/live/magical.m3u8',
+                fallbackVideoUrl: 'https://bnkd.xyz/offline.mp4',
+                iconUrl: 'https://bnkd.xyz/img/magicaltv.png',
+                description: 'MagicalTV is a webchannel that focuses on giving you some of the most magical shows and movies out there.',
+                gradient: 'linear-gradient(145deg, rgba(252, 3, 128,0.7) 0%, rgba(255, 0, 208,0.7) 100%)',
+                genre: 'Animation, Entertainment',
+                socialMedia: {
+                    discord: 'https://discord.gg/sh2Wre6X8C'
+                },
+                additionalInfo: 'MagicalTV is a webchannel that focuses on giving you some of the most magical shows and movies out there.'
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const navbar = document.querySelector('.navbar');
+            const videoPlayer = document.getElementById('videoPlayer');
+            const videoContainer = document.getElementById('videoContainer');
+            const channelsContainer = document.getElementById('channelsContainer');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const muteBtn = document.getElementById('muteBtn');
+            const fullscreenBtn = document.getElementById('fullscreenBtn');
+            const infoBtn = document.getElementById('infoBtn');
+
+            const channelInfoPopup = document.getElementById('channelInfoPopup');
+            const closeInfoBtn = document.getElementById('closeInfoBtn');
+            const channelNameEl = document.getElementById('channelName');
+            const channelNumberEl = document.getElementById('channelNumber');
+            const channelDescriptionEl = document.getElementById('channelDescription');
+            const channelIconEl = document.getElementById('channelIcon');
+            const channelIconBgEl = document.getElementById('channelIconBg');
+
+            const channelGenreSection = document.getElementById('channelGenreSection');
+            const channelGenreEl = document.getElementById('channelGenre');
+            const channelWebsiteSection = document.getElementById('channelWebsiteSection');
+            const channelWebsiteEl = document.getElementById('channelWebsite');
+            const channelSocialMediaSection = document.getElementById('channelSocialMediaSection');
+            const channelSocialMediaEl = document.getElementById('channelSocialMedia');
+            const channelAdditionalInfoSection = document.getElementById('channelAdditionalInfoSection');
+            const channelAdditionalInfoEl = document.getElementById('channelAdditionalInfo');
+
+
+            const channelInfoTransient = document.getElementById('channelInfo');
+            const channelNameTransientEl = document.getElementById('channelNameTransient');
+            const channelNumberTransientEl = document.getElementById('channelNumberTransient');
+            const channelDescriptionTransientEl = document.getElementById('channelDescriptionTransient');
+            const channelIconTransientEl = document.getElementById('channelIconTransient');
+            const channelIconBgTransientEl = document.getElementById('channelIconBgTransient');
+            const progressBar = document.getElementById('progressBar');
+
+            let hls = null;
+            let currentChannel = null;
+            let isPlaying = false;
+            let isMuted = false;
+            let lastActivityTime = Date.now();
+
+            function resetNavbarTimeout() {
+                clearTimeout(navbarTimeout);
+                navbar.classList.remove('hidden-navbar');
+                navbarTimeout = setTimeout(() => {
+                    navbar.classList.add('hidden-navbar');
+                }, navbarHideDelay);
+            }
+
+            function showTransientChannelInfo() {
+                clearTimeout(transientInfoTimeout);
+                channelInfoTransient.classList.add('show');
+                transientInfoTimeout = setTimeout(() => {
+                    channelInfoTransient.classList.remove('show');
+                }, transientInfoDisplayDuration);
+            }
+
+            function updateProgressBar() {
+                progressBar.style.transition = 'none';
+                progressBar.style.width = '100%';
+                setTimeout(() => {
+                    progressBar.style.transition = `width ${transientInfoDisplayDuration / 1000}s linear`;
+                    progressBar.style.width = '0%';
+                }, 50);
+            }
+
+            document.addEventListener('mousemove', resetNavbarTimeout);
+            document.addEventListener('keydown', resetNavbarTimeout);
+            document.addEventListener('click', resetNavbarTimeout);
+            document.addEventListener('scroll', resetNavbarTimeout);
+            document.addEventListener('touchstart', resetNavbarTimeout);
+
+            resetNavbarTimeout();
+
+            function togglePlayerControls(enable) {
+                playPauseBtn.disabled = !enable;
+                muteBtn.disabled = !enable;
+                fullscreenBtn.disabled = !enable;
+                infoBtn.disabled = !enable;
+
+                if (enable) {
+                    playPauseBtn.classList.remove('disabled');
+                    muteBtn.classList.remove('disabled');
+                    fullscreenBtn.classList.remove('disabled');
+                    infoBtn.classList.remove('disabled');
+                } else {
+                    playPauseBtn.classList.add('disabled');
+                    muteBtn.classList.add('disabled');
+                    fullscreenBtn.classList.add('disabled');
+                    infoBtn.classList.add('disabled');
+                }
+            }
+
+            togglePlayerControls(false);
+
+            function loadChannel(channel) {
+                if (hls) {
+                    hls.destroy();
+                }
+
+                currentChannel = channel;
+                videoContainer.classList.remove('hidden');
+
+                channelNameTransientEl.textContent = channel.name;
+                channelNumberTransientEl.textContent = `#${channelsData.indexOf(channel) + 1}`;
+                channelDescriptionTransientEl.textContent = channel.description;
+                channelIconTransientEl.src = channel.iconUrl;
+                channelIconBgTransientEl.style.background = channel.gradient;
+                channelInfoTransient.classList.remove('hidden');
+
+                showTransientChannelInfo();
+                updateProgressBar();
+
+                if (Hls.isSupported()) {
+                    hls = new Hls();
+                    hls.loadSource(channel.streamUrl);
+                    hls.attachMedia(videoPlayer);
+                    hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                        videoPlayer.play();
+                        isPlaying = true;
+                        playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                        togglePlayerControls(true);
+                    });
+                    hls.on(Hls.Events.ERROR, function(event, data) {
+                        if (data.fatal) {
+                            console.error('HLS fatal error:', data);
+                            videoPlayer.src = channel.fallbackVideoUrl || defaultFallbackVideoUrl;
+                            videoPlayer.play();
+                            isPlaying = true;
+                            playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                            togglePlayerControls(true);
+                            console.warn(`Falling back to MP4 for channel: ${channel.name}`);
+                        }
+                    });
+                } else if (videoPlayer.canPlayType('application/vnd.apple.mpegurl')) {
+                    videoPlayer.src = channel.streamUrl;
+                    videoPlayer.addEventListener('loadedmetadata', function() {
+                        videoPlayer.play();
+                        isPlaying = true;
+                        playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                        togglePlayerControls(true);
+                    });
+                    videoPlayer.addEventListener('error', () => {
+                        videoPlayer.src = channel.fallbackVideoUrl || defaultFallbackVideoUrl;
+                        videoPlayer.play();
+                        isPlaying = true;
+                        playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                        togglePlayerControls(true);
+                        console.warn(`Falling back to MP4 for channel (native HLS error): ${channel.name}`);
+                    });
+                } else {
+                    videoPlayer.src = channel.fallbackVideoUrl || defaultFallbackVideoUrl;
+                    videoPlayer.play();
+                    isPlaying = true;
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                    togglePlayerControls(true);
+                    console.warn(`Directly playing MP4 fallback for channel (HLS not supported): ${channel.name}`);
+                }
+
+                document.querySelectorAll('.channel-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.getElementById(`channel-btn-${channel.id}`).classList.add('active');
+            }
+
+            channelsData.forEach((channel, index) => {
+                const button = document.createElement('button');
+                button.id = `channel-btn-${channel.id}`;
+                button.className = 'channel-btn p-3 aspect-square rounded-full bg-black bg-opacity-30 hover:bg-opacity-50 transition-all w-10 h-10 flex items-center justify-center';
+                button.innerHTML = `<img src="${channel.iconUrl}" alt="${channel.name}" class="w-full h-full object-contain rounded-full">`;
+                button.title = channel.name;
+                button.onclick = () => loadChannel(channel);
+                channelsContainer.appendChild(button);
+            });
+
+            playPauseBtn.addEventListener('click', () => {
+                if (videoPlayer.paused) {
+                    videoPlayer.play();
+                    isPlaying = true;
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause text-white"></i>';
+                } else {
+                    videoPlayer.pause();
+                    isPlaying = false;
+                    playPauseBtn.innerHTML = '<i class="fas fa-play text-white"></i>';
+                }
+            });
+
+            muteBtn.addEventListener('click', () => {
+                videoPlayer.muted = !videoPlayer.muted;
+                isMuted = videoPlayer.muted;
+                muteBtn.innerHTML = isMuted ? '<i class="fas fa-volume-mute text-white"></i>' : '<i class="fas fa-volume-up text-white"></i>';
+            });
+
+            fullscreenBtn.addEventListener('click', () => {
+                if (videoContainer.requestFullscreen) {
+                    videoContainer.requestFullscreen();
+                } else if (videoContainer.mozRequestFullScreen) {
+                    videoContainer.mozRequestFullScreen();
+                } else if (videoContainer.webkitRequestFullscreen) {
+                    videoContainer.webkitRequestFullscreen();
+                } else if (videoContainer.msRequestFullscreen) {
+                    videoContainer.msRequestFullscreen();
+                }
+            });
+
+            infoBtn.addEventListener('click', () => {
+                if (currentChannel) {
+                    channelNameEl.textContent = currentChannel.name;
+                    channelNumberEl.textContent = `#${channelsData.indexOf(currentChannel) + 1}`;
+                    channelDescriptionEl.textContent = currentChannel.description;
+                    channelIconEl.src = currentChannel.iconUrl;
+                    channelIconBgEl.style.background = currentChannel.gradient;
+
+                    if (currentChannel.genre) {
+                        channelGenreSection.classList.remove('hidden');
+                        channelGenreEl.textContent = currentChannel.genre;
+                    } else {
+                        channelGenreSection.classList.add('hidden');
+                    }
+
+                    if (currentChannel.website) {
+                        channelWebsiteSection.classList.remove('hidden');
+                        channelWebsiteEl.href = currentChannel.website;
+                        channelWebsiteEl.textContent = currentChannel.website.replace(/(^\w+:|^)\/\//, '');
+                    } else {
+                        channelWebsiteSection.classList.add('hidden');
+                    }
+
+                    if (currentChannel.socialMedia && Object.keys(currentChannel.socialMedia).length > 0) {
+                        channelSocialMediaSection.classList.remove('hidden');
+                        channelSocialMediaEl.innerHTML = '';
+                        for (const platform in currentChannel.socialMedia) {
+                            const url = currentChannel.socialMedia[platform];
+                            const iconClass = {
+                                discord: 'fab fa-discord',
+                                twitter: 'fab fa-twitter',
+                                threads: 'fab fa-threads',
+                                bluesky: 'fa-solid fa-cloud',
+                                vanillo: 'fa-solid fa-tv',
+                                instagram: 'fab fa-instagram',
+                                schedule: 'fa-solid fa-calendar-alt'
+                            }[platform] || 'fas fa-link';
+
+                            const link = document.createElement('a');
+                            link.href = url;
+                            link.target = '_blank';
+                            link.rel = 'noopener noreferrer';
+                            link.innerHTML = `<i class="${iconClass}"></i>`;
+                            link.title = platform.charAt(0).toUpperCase() + platform.slice(1);
+                            channelSocialMediaEl.appendChild(link);
+                        }
+                    } else {
+                        channelSocialMediaSection.classList.add('hidden');
+                    }
+
+                    if (currentChannel.additionalInfo) {
+                        channelAdditionalInfoSection.classList.remove('hidden');
+                        channelAdditionalInfoEl.innerHTML = marked.parse(currentChannel.additionalInfo);
+                    } else {
+                        channelAdditionalInfoSection.classList.add('hidden');
+                    }
+
+                    channelInfoPopup.classList.add('show');
+                }
+            });
+
+            closeInfoBtn.addEventListener('click', () => {
+                channelInfoPopup.classList.remove('show');
+            });
+
+            channelInfoPopup.addEventListener('click', (event) => {
+                if (event.target === channelInfoPopup) {
+                    channelInfoPopup.classList.remove('show');
+                }
+            });
+
+            if (channelsData.length > 0) {
+                loadChannel(channelsData[0]);
+            }
+        });
+    </script>
+</body>
+</html>
